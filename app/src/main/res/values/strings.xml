@@ -2,6 +2,8 @@
     <string name="app_name">Sudoku</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Statistic</string>
+    <string name="title_gameboard">Game</string>
+    <string name="title_level">Levels</string>
     <string name="startButton">Start</string>
     <string name="resumeButton">Resume</string>
 </resources>
