@@ -31,6 +31,10 @@
         android:id="@+id/navigation_level"
         android:name="com.app.game.sudoku.ui.level.LevelFragment"
         android:label="@string/title_level"
-        tools:layout="@layout/fragment_level" />
+        tools:layout="@layout/fragment_level" >
+        <action
+            android:id="@+id/action_navigation_level_to_navigation_gameboard"
+            app:destination="@id/navigation_gameboard" />
+    </fragment>
 
 </navigation>

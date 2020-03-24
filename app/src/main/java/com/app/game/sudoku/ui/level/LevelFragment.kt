@@ -17,7 +17,7 @@ class LevelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding: FragmentLevelBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_gameboard, container, false)
+            inflater, R.layout.fragment_level, container, false)
         return binding.root
     }
 }
