@@ -4,6 +4,10 @@
     <string name="title_dashboard">Statistic</string>
     <string name="title_gameboard">Game</string>
     <string name="title_level">Levels</string>
-    <string name="startButton">Start</string>
+    <string name="classicGameButton">Start Classic</string>
     <string name="resumeButton">Resume</string>
+    <string name="timeGameButton">Start Time</string>
+    <string name="level_easy">Easy</string>
+    <string name="level_medium">Medium</string>
+    <string name="level_hard">Hard</string>
 </resources>
