@@ -4,9 +4,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.app.game.sudoku.back.Cell
 
 class GameboardView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet){
 
@@ -23,6 +25,8 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
     private var selectedRow = 0
 
     private var listener: GameboardView.OnTouchListener? = null
+
+    private var cells: List<Cell>? = null
 
     interface OnTouchListener {
         fun onCellTouched(row: Int, col: Int )
@@ -50,25 +54,51 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         color = Color.parseColor("#daf7f7")
     }
 
+    private val textPaint = Paint().apply {
+        style = Paint.Style.FILL_AND_STROKE
+        color = Color.BLACK
+        textSize = 24F
+    }
+
     override  fun onDraw(canvas: Canvas) {
         cellSizePixels = (width / size).toFloat()
 
         fillCells(canvas)
         drawLines(canvas)
+        drawText(canvas)
+        
+    }
+
+    private fun drawText(canvas: Canvas) {
+        cells?.forEach {
+            val row = it.row
+            val col = it.col
+            val stringValue = it.value.toString()
+            val textBounds = Rect()
+            textPaint.getTextBounds(stringValue, 0, stringValue.length, textBounds)
+            val textWidth = textPaint.measureText(stringValue)
+            val textHeidth = textBounds.height()
+
+            canvas.drawText(
+                stringValue,
+                (col * cellSizePixels) + cellSizePixels / 2 - textWidth /2,
+                (row * cellSizePixels) + cellSizePixels / 2 - textHeidth / 2,
+                textPaint
+            )
+        }
     }
 
     private fun fillCells(canvas: Canvas) {
-        if (selectedCall == -1 || selectedRow == -1) return
+        cells?.forEach {
+            val row = it.row
+            val col = it.col
 
-        for (r in 0..size) {
-            for (c in 0..size) {
-                if (r == selectedRow && c == selectedCall) {
-                    fillCell(canvas, r, c, selectedCellPaint)
-                } else if (r == selectedRow || c == selectedCall) {
-                    fillCell(canvas, r, c, conflictedCellPaint)
-                } else if (r / sqrtSize == selectedRow / sqrtSize && c / sqrtSize == selectedCall / sqrtSize) {
-                    fillCell(canvas, r, c, conflictedCellPaint)
-                }
+            if (row == selectedRow && col == selectedCall) {
+                fillCell(canvas, row, col, selectedCellPaint)
+            } else if (row == selectedRow || col == selectedCall) {
+                fillCell(canvas, row, col, conflictedCellPaint)
+            } else if (row / sqrtSize == selectedRow / sqrtSize && col / sqrtSize == selectedCall / sqrtSize) {
+                fillCell(canvas, row, col, conflictedCellPaint)
             }
         }
     }
@@ -138,6 +168,11 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
 
     fun registerListener(listener: OnTouchListener) {
         this.listener = listener
+    }
+
+    fun updateCells(cells: List<Cell>) {
+        this.cells = cells
+        invalidate()
     }
 
 }
