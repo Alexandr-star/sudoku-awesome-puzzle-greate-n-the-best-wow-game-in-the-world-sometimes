@@ -10,6 +10,10 @@ import android.view.View
 
 class GameboardView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet){
 
+    fun GameboardView() {
+
+    }
+
     private var sqrtSize = 3
     private var size = 9
 

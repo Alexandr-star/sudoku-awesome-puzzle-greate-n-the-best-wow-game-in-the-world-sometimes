@@ -26,7 +26,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
         val binding: FragmentGameboardBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_gameboard, container, false)
 
-        gameBoardView.registerListener(this)
+       binding.root.findViewById<GameboardView>(R.id.gameBoardView).registerListener(this)
 
         gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
 
