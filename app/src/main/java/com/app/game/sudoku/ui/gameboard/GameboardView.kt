@@ -15,8 +15,14 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
 
     private var cellSizePixels = 0F
 
-    private var selectedCall = -1
-    private var selectedRow = -1
+    private var selectedCall = 0
+    private var selectedRow = 0
+
+    private var listener: GameboardView.OnTouchListener? = null
+
+    interface OnTouchListener {
+        fun onCellTouched(row: Int, col: Int )
+    }
 
     private val thickLinePaint = Paint().apply {
         style = Paint.Style.STROKE
@@ -115,8 +121,20 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
     }
 
     private fun handleTouchEvent(x: Float, y: Float) {
-        selectedRow = (y / cellSizePixels).toInt()
-        selectedCall = (x / cellSizePixels).toInt()
+        val possibleSelectedRow = (y / cellSizePixels).toInt()
+        val possibleSelectedCall = (x / cellSizePixels).toInt()
+        listener?.onCellTouched(possibleSelectedRow, possibleSelectedCall)
+    }
+
+    fun updateSelectedCellUI(row: Int, col: Int) {
+        selectedCall = col
+        selectedRow = row
         invalidate()
     }
+
+    fun registerListener(listener: OnTouchListener) {
+        this.listener = listener
+    }
+
 }
+

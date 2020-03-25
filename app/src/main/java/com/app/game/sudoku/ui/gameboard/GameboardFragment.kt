@@ -1,16 +1,20 @@
 package com.app.game.sudoku.ui.gameboard
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.app.game.sudoku.R
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
+import com.app.game.sudoku.ui.gameboard.GameboardView.OnTouchListener
+import kotlinx.android.synthetic.main.fragment_gameboard.*
 
-class GameboardFragment : Fragment() {
+class GameboardFragment : Fragment(), OnTouchListener {
     private lateinit var gameboardViewModel: GameboardViewModel
 
     override fun onCreateView(
@@ -18,11 +22,28 @@ class GameboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
+
         val binding: FragmentGameboardBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_gameboard, container, false)
 
+        gameBoardView.registerListener(this)
+
+        gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
+
+        gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer {
+            updateSelectedCellUI(it)
+        })
+
         return binding.root
+    }
+
+    private fun updateSelectedCellUI(cell: Pair<Int, Int>?) = cell?.let {
+        gameBoardView.updateSelectedCellUI(cell.first, cell.second)
+
+    }
+
+    override fun onCellTouched(row: Int, col: Int) {
+        gameboardViewModel.game.updateSelectedCell(row, col)
     }
 
 }
