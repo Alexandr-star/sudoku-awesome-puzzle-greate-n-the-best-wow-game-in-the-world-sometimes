@@ -1,14 +1,12 @@
 package com.app.game.sudoku.ui.gameboard
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.app.game.sudoku.back.Cell
+import kotlin.math.min
 
 class GameboardView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet){
 
@@ -20,6 +18,7 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
     private var size = 9
 
     private var cellSizePixels = 0F
+    private var noteSizePixels = 0F
 
     private var selectedCall = 0
     private var selectedRow = 0
@@ -60,31 +59,88 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         textSize = 24F
     }
 
+    private val startingCellTextPaint = Paint().apply {
+        style = Paint.Style.FILL_AND_STROKE
+        color = Color.BLACK
+        textSize = 32F
+        typeface = Typeface.DEFAULT_BOLD
+    }
+
+    private val startingCellPaint = Paint().apply {
+        style = Paint.Style.FILL_AND_STROKE
+        color = Color.parseColor("#85e6e6")
+    }
+
+    private val noteTextPaint = Paint().apply {
+        style = Paint.Style.FILL_AND_STROKE
+        color = Color.BLACK
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val sizePixels = min(widthMeasureSpec, heightMeasureSpec)
+        setMeasuredDimension(sizePixels, sizePixels)
+    }
+
     override  fun onDraw(canvas: Canvas) {
-        cellSizePixels = (width / size).toFloat()
+        updateMeasure(width)
 
         fillCells(canvas)
         drawLines(canvas)
         drawText(canvas)
-        
+
+    }
+
+    private fun updateMeasure(width: Int) {
+        cellSizePixels = width / size.toFloat()
+        noteSizePixels = cellSizePixels / sqrtSize.toFloat()
+        noteTextPaint.textSize = cellSizePixels / sqrtSize.toFloat()
+        textPaint.textSize = cellSizePixels / 1.5F
+        startingCellTextPaint.textSize = cellSizePixels / 1.5F
     }
 
     private fun drawText(canvas: Canvas) {
-        cells?.forEach {
-            val row = it.row
-            val col = it.col
-            val stringValue = it.value.toString()
-            val textBounds = Rect()
-            textPaint.getTextBounds(stringValue, 0, stringValue.length, textBounds)
-            val textWidth = textPaint.measureText(stringValue)
-            val textHeidth = textBounds.height()
+        cells?.forEach {cell ->
+            val value = cell.value
 
-            canvas.drawText(
-                stringValue,
-                (col * cellSizePixels) + cellSizePixels / 2 - textWidth /2,
-                (row * cellSizePixels) + cellSizePixels / 2 - textHeidth / 2,
-                textPaint
-            )
+
+            if (value == 0) {
+                // draw notes
+                cell.notes.forEach { note ->
+                    val rowInCell = (note - 1) / sqrtSize
+                    val colInCell = (note - 1) % sqrtSize
+                    val stringValue = note.toString()
+
+                    val textBounds = Rect()
+                    noteTextPaint.getTextBounds(stringValue, 0, stringValue.length, textBounds)
+                    val textWidth = noteTextPaint.measureText(stringValue)
+                    val textHeigth = textBounds.height()
+
+                    canvas.drawText(
+                        stringValue,
+                        (cell.col * cellSizePixels) + (colInCell * noteSizePixels) + noteSizePixels / 2 - textWidth / 2f,
+                        (cell.col * cellSizePixels) + (rowInCell * noteSizePixels) + noteSizePixels / 2 + textHeigth / 2f,
+                         noteTextPaint
+                    )
+                }
+            } else {
+
+                val row = cell.row
+                val col = cell.col
+                val stringValue = cell.value.toString()
+                val paintToUse = if (cell.isStartingCell) startingCellTextPaint else textPaint
+                val textBounds = Rect()
+                paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
+                val textWidth = paintToUse.measureText(stringValue)
+                val textHeidth = textBounds.height()
+
+                canvas.drawText(
+                    stringValue,
+                    (col * cellSizePixels) + cellSizePixels / 2 - textWidth / 2,
+                    (row * cellSizePixels) + cellSizePixels / 2 + textHeidth / 2,
+                    paintToUse
+                )
+            }
         }
     }
 
@@ -93,7 +149,9 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
             val row = it.row
             val col = it.col
 
-            if (row == selectedRow && col == selectedCall) {
+            if (it.isStartingCell) {
+                fillCell(canvas, row, col, startingCellPaint)
+            } else if (row == selectedRow && col == selectedCall) {
                 fillCell(canvas, row, col, selectedCellPaint)
             } else if (row == selectedRow || col == selectedCall) {
                 fillCell(canvas, row, col, conflictedCellPaint)
@@ -111,12 +169,6 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
             (r + 1) * cellSizePixels,
             paint
         )
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val sizePixels = Math.min(widthMeasureSpec, heightMeasureSpec)
-        setMeasuredDimension(sizePixels, sizePixels)
     }
 
     private fun drawLines(canvas: Canvas) {
