@@ -1,5 +1,6 @@
 package com.app.game.sudoku.back
 
+import kotlin.math.pow
 import kotlin.random.Random
 
 class Sudoku {
@@ -16,7 +17,6 @@ class Sudoku {
                 print("${baseGrid[i][j]} ")
             }
             println()
-
         }
     }
 
@@ -34,6 +34,37 @@ class Sudoku {
             }
         }
         printMat("mixed")
+    }
+
+    fun createFinalSudokuBoard() {
+        var cellLook: Array<IntArray> =  Array(9) { IntArray(9) {0} }
+        var iterate = 0
+        var difficult = n.toDouble().pow(4).toInt()
+
+        while (iterate < n.toDouble().pow(4).toInt()) {
+            var i = Random.nextInt(0, n * n)
+            var j = Random.nextInt(0, n * n)
+
+            if (cellLook[i][j] == 0) {
+                iterate++
+                cellLook[i][j] = 1
+
+                var temp = baseGrid[i][j]
+                baseGrid[i][j] = 0
+                difficult--
+
+                var tableSolution = baseGrid
+                var solver = SolveSudoku(tableSolution)
+                var iSolution = 0
+                for (solution in ) {
+                    iSolution++
+                }
+
+                if (iSolution != 1) {
+                    baseGrid[i][j] = temp
+                }
+            }
+        }
     }
 
     fun transposeBaseGrid() {
@@ -145,6 +176,7 @@ class Sudoku {
             println()
         }
     }
+
     private fun printMat(string: String) {
         println(string)
         for (i in 0 until n * n) {
@@ -154,4 +186,15 @@ class Sudoku {
             println()
         }
     }
+
+    private fun printMat(string: String, array: Array<IntArray>) {
+        println(string)
+        for (i in 0 until n * n) {
+            for (j in 0 until n * n) {
+                print("${array[i][j]} ")
+            }
+            println()
+        }
+    }
 }
+
