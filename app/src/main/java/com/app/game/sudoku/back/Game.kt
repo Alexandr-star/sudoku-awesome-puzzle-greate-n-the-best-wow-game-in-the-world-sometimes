@@ -1,8 +1,12 @@
 package com.app.game.sudoku.back
 
+import android.graphics.drawable.LevelListDrawable
 import androidx.lifecycle.MutableLiveData
 
 class Game {
+    private var mode = false
+    private var level = 0
+    private var countErrors: Int = 0
 
     var selectedCellLiveData = MutableLiveData<Pair<Int, Int>>()
     var cellsLiveData = MutableLiveData<List<Cell>>()
@@ -15,15 +19,17 @@ class Game {
 
     private val board: Board
 
+
     init {
-        val cells = List(9 * 9) {i -> Cell(i / 9, i % 9, i % 9)}
-        //cells[0].notes = mutableSetOf(1, 2, 3, 4, 5 ,6, 7, 8, 9)
+        val cells = List(9 * 9) {i -> Cell(i / 9, i % 9, 1)}
+        println(cells)
         board = Board(9, cells)
 
         selectedCellLiveData.postValue(Pair(selectedRow, selectedCol))
         cellsLiveData.postValue(board.cells)
         takingNotesLiveData.postValue(isTakingNots)
     }
+
 
     fun handleInput(number: Int) {
         if (selectedRow == -1 || selectedCol == -1) return
@@ -79,5 +85,8 @@ class Game {
         cellsLiveData.postValue(board.cells)
     }
 
-
+    fun setSettingGame(mode: Boolean, level: Int) {
+        this.mode = mode
+        this.level = level
+    }
 }

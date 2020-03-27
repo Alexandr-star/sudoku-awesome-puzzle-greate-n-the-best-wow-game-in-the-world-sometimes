@@ -18,11 +18,15 @@ import com.app.game.sudoku.R
 import com.app.game.sudoku.back.Cell
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
 import com.app.game.sudoku.ui.gameboard.GameboardView.OnTouchListener
+import com.app.game.sudoku.ui.level.ClassicLevelGameViewModel
 import kotlinx.android.synthetic.main.fragment_gameboard.*
 import kotlinx.android.synthetic.main.fragment_gameboard.view.*
 
 class GameboardFragment : Fragment(), OnTouchListener {
     private lateinit var gameboardViewModel: GameboardViewModel
+    private lateinit var classicLevelGameViewModel: ClassicLevelGameViewModel
+    private lateinit var timeLevelGameViewModel: ClassicLevelGameViewModel
+
     private lateinit var numberButtons: List<View>
 
     override fun onCreateView(
@@ -34,7 +38,19 @@ class GameboardFragment : Fragment(), OnTouchListener {
         val binding: FragmentGameboardBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_gameboard, container, false)
 
-       binding.root.findViewById<GameboardView>(R.id.gameBoardView).registerListener(this)
+        binding.root.findViewById<GameboardView>(R.id.gameBoardView).registerListener(this)
+
+        if (classicLevelGameViewModel.settingGame.getLevel() == 0) {
+            gameboardViewModel.game.setSettingGame(
+                timeLevelGameViewModel.settingGame.getMode(),
+                timeLevelGameViewModel.settingGame.getLevel()
+            )
+        } else {
+            gameboardViewModel.game.setSettingGame(
+                classicLevelGameViewModel.settingGame.getMode(),
+                classicLevelGameViewModel.settingGame.getLevel()
+            )
+        }
 
         gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
 

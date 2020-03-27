@@ -1,11 +1,18 @@
 package com.app.game.sudoku.back
 
+import androidx.lifecycle.ViewModelStore
+import com.app.game.sudoku.ui.gameboard.GameboardViewModel
+import com.app.game.sudoku.ui.home.HomeFragment
+import com.app.game.sudoku.ui.level.ClassicLevelGameFragment
 import kotlin.math.pow
 import kotlin.random.Random
 
 class Sudoku {
     private val n = 3
+    private val SIZE  = 9
+    private val EMPTY  = 0
     private val itter = 10
+    private var LEVEL = 0
 
     private var baseGrid: Array<IntArray> =  Array(9) { IntArray(9) }
 
@@ -18,11 +25,18 @@ class Sudoku {
             }
             println()
         }
+         mixSudokuGrid()
+         println("mixed")
+         printMat()
     }
 
-    fun mixSudokuGrid() {
+    private fun level() {
+
+    }
+
+    private fun mixSudokuGrid() {
         for (i in 0 until itter) {
-            var randomСonversion = Random.nextInt(0, 5)
+            val randomСonversion = Random.nextInt(0, 5)
 
             when (randomСonversion) {
                 0 -> transposeBaseGrid()
@@ -37,34 +51,84 @@ class Sudoku {
     }
 
     fun createFinalSudokuBoard() {
-        var cellLook: Array<IntArray> =  Array(9) { IntArray(9) {0} }
+        val cellLook: Array<IntArray> =  Array(9) { IntArray(9) {0} }
         var iterate = 0
         var difficult = n.toDouble().pow(4).toInt()
 
-        while (iterate < n.toDouble().pow(4).toInt()) {
-            var i = Random.nextInt(0, n * n)
-            var j = Random.nextInt(0, n * n)
+        while (iterate < LEVEL) {
+            val i = Random.nextInt(0, n * n)
+            val j = Random.nextInt(0, n * n)
 
             if (cellLook[i][j] == 0) {
                 iterate++
                 cellLook[i][j] = 1
 
-                var temp = baseGrid[i][j]
+                val temp = baseGrid[i][j]
                 baseGrid[i][j] = 0
                 difficult--
 
-                var tableSolution = baseGrid
-                var solver = SolveSudoku(tableSolution)
-                var iSolution = 0
-                for (solution in ) {
-                    iSolution++
-                }
-
-                if (iSolution != 1) {
+                val tableSolution = baseGrid.copyOf()
+                if (!solve(tableSolution)) {
                     baseGrid[i][j] = temp
+                    difficult++
                 }
             }
         }
+
+        println("result")
+        println("difficult = ${difficult}")
+        printMat()
+    }
+
+    private fun solve(board: Array<IntArray>): Boolean {
+        for (row in 0 until  SIZE) {
+            for (col in 0 until SIZE) {
+                if (board[row][col] == EMPTY) {
+                    for (number in 1 until  SIZE + 1) {
+                        if (isOk(row, col, number, board)) {
+                            return true
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private fun isOk(row: Int, col: Int, number: Int, board: Array<IntArray>): Boolean {
+        return !isInRow(row, number, board) &&
+                !isInCol(col, number, board) &&
+                !isInBox(row, col, number, board);
+    }
+
+    private fun isInBox(row: Int, col: Int, number: Int, board: Array<IntArray>): Boolean {
+        var r = row - row % n;
+        var c = col - col % n;
+
+        for (i in r until r + n)
+        for (j in c until c + n)
+        if (board[i][j] == number)
+            return true;
+
+        return false;
+    }
+
+    private fun isInCol(col: Int, number: Int , board: Array<IntArray>): Boolean {
+        for (i in 0 until SIZE)
+        if (board[i][col] == number)
+            return true;
+
+        return false;
+    }
+
+    private fun isInRow(row: Int, number: Int, board: Array<IntArray>): Boolean {
+        for (i in 0 until SIZE)
+        if (board[row][i] == number)
+            return true;
+
+        return false;
     }
 
     fun transposeBaseGrid() {
