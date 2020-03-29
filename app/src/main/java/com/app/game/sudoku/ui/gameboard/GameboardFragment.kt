@@ -19,13 +19,14 @@ import com.app.game.sudoku.back.Cell
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
 import com.app.game.sudoku.ui.gameboard.GameboardView.OnTouchListener
 import com.app.game.sudoku.ui.level.ClassicLevelGameViewModel
+import com.app.game.sudoku.ui.level.TimeLevelGameViewModel
 import kotlinx.android.synthetic.main.fragment_gameboard.*
 import kotlinx.android.synthetic.main.fragment_gameboard.view.*
 
 class GameboardFragment : Fragment(), OnTouchListener {
     private lateinit var gameboardViewModel: GameboardViewModel
     private lateinit var classicLevelGameViewModel: ClassicLevelGameViewModel
-    private lateinit var timeLevelGameViewModel: ClassicLevelGameViewModel
+    private lateinit var timeLevelGameViewModel: TimeLevelGameViewModel
 
     private lateinit var numberButtons: List<View>
 
@@ -40,6 +41,10 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
         binding.root.findViewById<GameboardView>(R.id.gameBoardView).registerListener(this)
 
+        classicLevelGameViewModel = ViewModelProvider(this).get(ClassicLevelGameViewModel::class.java)
+        timeLevelGameViewModel = ViewModelProvider(this).get(TimeLevelGameViewModel::class.java)
+        gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
+
         if (classicLevelGameViewModel.settingGame.getLevel() == 0) {
             gameboardViewModel.game.setSettingGame(
                 timeLevelGameViewModel.settingGame.getMode(),
@@ -52,12 +57,12 @@ class GameboardFragment : Fragment(), OnTouchListener {
             )
         }
 
-        gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
 
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
 //        gameboardViewModel.game.takingNotesLiveData.observe(viewLifecycleOwner, Observer { updateNoteTakingUI(it) })
 //        gameboardViewModel.game.highlightedKeysLiveData.observe(viewLifecycleOwner, Observer {updateHighlightedKeys(it) })
+
 
         numberButtons = listOf(
             binding.buttonsLayout.get(0),
@@ -71,12 +76,20 @@ class GameboardFragment : Fragment(), OnTouchListener {
             binding.buttonsLayout.get(8)
         )
         numberButtons.forEachIndexed { index, button ->
-            button.setOnClickListener{gameboardViewModel.game.handleInput(index + 1)}
+            button.setOnClickListener{
+                gameboardViewModel.game.handleInput(index + 1)
+                gameboardViewModel.game.checkMistakes()
+                gameboardViewModel.game.mistakesLiveData.observe(viewLifecycleOwner, Observer { updateCellsWithMistakes(it) })
+            }
         }
 //        binding.notesButton.setOnClickListener{gameboardViewModel.game.changeNoteTakingState()}
         binding.deleteButton.setOnClickListener {gameboardViewModel.game.deleteNumInCell()}
 
         return binding.root
+    }
+
+    private fun updateCellsWithMistakes(cells: MutableList<Pair<Int, Int>>) {
+        gameBoardView.updateMistakesCells(cells)
     }
 
 //    private fun updateHighlightedKeys(set: Set<Int>?) = set?.let {

@@ -12,12 +12,12 @@ class Sudoku {
     private val SIZE  = 9
     private val EMPTY  = 0
     private val itter = 10
-    private var LEVEL = 0
+    private var LEVEL = 25
 
     private var baseGrid: Array<IntArray> =  Array(9) { IntArray(9) }
 
 
-     fun initSudokuGrid() {
+     private fun initSudokuGrid() {
         for (i in 0 until n * n) {
             for (j in 0 until n * n) {
                 baseGrid[i][j] = ((i * n + i / n + j) % (n * n) + 1)
@@ -25,9 +25,14 @@ class Sudoku {
             }
             println()
         }
-         mixSudokuGrid()
-         println("mixed")
-         printMat()
+    }
+
+    fun getSudoku(): Array<IntArray> {
+        initSudokuGrid()
+        mixSudokuGrid()
+        createFinalSudokuBoard()
+        printMat("grid in Sudoku class")
+        return baseGrid
     }
 
     private fun level() {
@@ -50,7 +55,7 @@ class Sudoku {
         printMat("mixed")
     }
 
-    fun createFinalSudokuBoard() {
+    private fun createFinalSudokuBoard() {
         val cellLook: Array<IntArray> =  Array(9) { IntArray(9) {0} }
         var iterate = 0
         var difficult = n.toDouble().pow(4).toInt()
@@ -131,7 +136,7 @@ class Sudoku {
         return false;
     }
 
-    fun transposeBaseGrid() {
+    private fun transposeBaseGrid() {
         var temp = 0
         for (i in 0 until n * n) {
             for (j in i + 1  until n* n) {
@@ -154,7 +159,7 @@ class Sudoku {
         return grid
     }
 
-    fun swapRows() {
+    private fun swapRows() {
         var randomArea = Random.nextInt(0, n)
         var randomeLine1 = Random.nextInt(0, n)
 
@@ -188,13 +193,13 @@ class Sudoku {
         return grid
     }
 
-    fun swapCols() {
+    private fun swapCols() {
         baseGrid = transposeBaseGrid(baseGrid)
         baseGrid = swapRows(baseGrid)
         baseGrid = transposeBaseGrid(baseGrid)
     }
 
-    fun swapRowsBlock() {
+    private fun swapRowsBlock() {
         var randomArea1 = Random.nextInt(0, n)
         var randomArea2 = Random.nextInt(0, n)
         while (randomArea1 == randomArea2) randomArea2 = Random.nextInt(0, n)
@@ -226,7 +231,7 @@ class Sudoku {
         return grid
     }
 
-    fun swapColsBlock() {
+    private fun swapColsBlock() {
         baseGrid = transposeBaseGrid(baseGrid)
         baseGrid = swapRowsBlock(baseGrid)
         baseGrid = transposeBaseGrid(baseGrid)

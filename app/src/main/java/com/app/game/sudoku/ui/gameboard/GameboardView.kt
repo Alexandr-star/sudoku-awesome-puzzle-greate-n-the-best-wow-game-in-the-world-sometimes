@@ -10,10 +10,6 @@ import kotlin.math.min
 
 class GameboardView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet){
 
-    fun GameboardView() {
-
-    }
-
     private var sqrtSize = 3
     private var size = 9
 
@@ -50,13 +46,13 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
 
     private val conflictedCellPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
-        color = Color.parseColor("#daf7f7")
+        color = Color.parseColor("#5bdede")
     }
 
     private val textPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.BLACK
-        textSize = 24F
+        textSize = 32F
     }
 
     private val startingCellTextPaint = Paint().apply {
@@ -68,7 +64,7 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
 
     private val startingCellPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
-        color = Color.parseColor("#85e6e6")
+        color = Color.parseColor("#daf7f7")
     }
 
     private val noteTextPaint = Paint().apply {
@@ -157,6 +153,7 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
                 fillCell(canvas, row, col, conflictedCellPaint)
             } else if (row / sqrtSize == selectedRow / sqrtSize && col / sqrtSize == selectedCall / sqrtSize) {
                 fillCell(canvas, row, col, conflictedCellPaint)
+
             }
         }
     }
@@ -226,6 +223,11 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         this.cells = cells
         invalidate()
     }
+
+    fun updateMistakesCells(cells: MutableList<Pair<Int, Int>>) {
+        //TODO: сделать яцейки с ошибками красными
+    }
+
 
 }
 
