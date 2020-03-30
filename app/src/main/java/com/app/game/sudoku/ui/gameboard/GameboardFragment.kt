@@ -9,18 +9,23 @@ import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProviders.of
+import androidx.lifecycle.ViewModelStores.of
 import com.app.game.sudoku.R
 import com.app.game.sudoku.back.Cell
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
 import com.app.game.sudoku.ui.gameboard.GameboardView.OnTouchListener
 import kotlinx.android.synthetic.main.fragment_gameboard.*
+import java.util.EnumSet.of
+import java.util.Optional.of
 
 class GameboardFragment : Fragment(), OnTouchListener {
     private lateinit var gameboardViewModel: GameboardViewModel
 
     private lateinit var numberButtons: List<View>
 
-
+    var levelGame = "NULL"
+    var modeGame = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,22 +39,22 @@ class GameboardFragment : Fragment(), OnTouchListener {
         binding.root.findViewById<GameboardView>(R.id.gameBoardView).registerListener(this)
 
         gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
-
         val level = arguments!!.getInt("level")
         val mode = arguments!!.getInt("mode")
 
         when(level) {
-            1 -> gameboardViewModel.game.level = "easy"
-            2 -> gameboardViewModel.game.level = "medium"
-            3 -> gameboardViewModel.game.level = "hard"
+            1 -> levelGame = "easy"
+            2 -> levelGame = "medium"
+            3 -> levelGame = "hard"
         }
-        gameboardViewModel.game.mode = mode
+        modeGame = mode
+        gameboardViewModel.function(levelGame, modeGame)
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
 
         binding.setting = gameboardViewModel.game
 
-        gameboardViewModel.secondsUntilEnd.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
+        gameboardViewModel.game.secondsUntilEnd.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
             binding.timerTextView.text = DateUtils.formatElapsedTime(secondsUntilEnd)
         })
 
@@ -102,8 +107,6 @@ class GameboardFragment : Fragment(), OnTouchListener {
     private fun updateSelectedCellUI(cell: Pair<Int, Int>?) = cell?.let {
         gameBoardView.updateSelectedCellUI(cell.first, cell.second)
     }
-
-
 
     override fun onCellTouched(row: Int, col: Int) {
         gameboardViewModel.game.updateSelectedCell(row, col)
