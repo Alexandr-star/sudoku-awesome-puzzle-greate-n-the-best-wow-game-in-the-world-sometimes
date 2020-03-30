@@ -1,6 +1,5 @@
 package com.app.game.sudoku
 
-import android.os.Binder
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -9,8 +8,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.app.game.sudoku.back.SettingGame
-import com.app.game.sudoku.back.Sudoku
 import com.app.game.sudoku.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

@@ -27,17 +27,14 @@ class Game() {
     var mode = -1
 
     fun setSetting( level: Int,  mode: Int) {
-        when(level) {
-            1 -> this.level = "easy"
-            2 -> this.level = "medium"
-            3 -> this.level = "hard"
-        }
+
         this.mode = mode
     }
 
     init {
         val sudoku = Sudoku()
         grid = sudoku.getSudoku()
+
 
         val cells = List(SIZE * SIZE) {i -> Cell(i / SIZE, i % SIZE, grid.get(i / SIZE).get(i % SIZE))}
 
@@ -49,7 +46,6 @@ class Game() {
                 }
             }
         }
-
         selectedCellLiveData.postValue(Pair(selectedRow, selectedCol))
         cellsLiveData.postValue(board.cells)
         takingNotesLiveData.postValue(isTakingNots)

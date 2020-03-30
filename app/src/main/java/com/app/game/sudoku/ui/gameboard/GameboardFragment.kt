@@ -1,6 +1,7 @@
 package com.app.game.sudoku.ui.gameboard
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.app.game.sudoku.R
 import com.app.game.sudoku.back.Cell
-import com.app.game.sudoku.back.SettingGame
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
 import com.app.game.sudoku.ui.gameboard.GameboardView.OnTouchListener
-import com.app.game.sudoku.ui.level.LevelGameViewModel
 import kotlinx.android.synthetic.main.fragment_gameboard.*
 
 class GameboardFragment : Fragment(), OnTouchListener {
     private lateinit var gameboardViewModel: GameboardViewModel
 
     private lateinit var numberButtons: List<View>
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,14 +38,20 @@ class GameboardFragment : Fragment(), OnTouchListener {
         val level = arguments!!.getInt("level")
         val mode = arguments!!.getInt("mode")
 
-        gameboardViewModel.game.setSetting(level, mode)
+        when(level) {
+            1 -> gameboardViewModel.game.level = "easy"
+            2 -> gameboardViewModel.game.level = "medium"
+            3 -> gameboardViewModel.game.level = "hard"
+        }
+        gameboardViewModel.game.mode = mode
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
-        gameboardViewModel.setting.level = gameboardViewModel.game.level
-        gameboardViewModel.setting.mode = gameboardViewModel.game.mode
 
-        println("setting is ${gameboardViewModel.setting.level}, ${gameboardViewModel.setting.mode}")
-        binding.setting = gameboardViewModel.setting
+        binding.setting = gameboardViewModel.game
+
+        gameboardViewModel.secondsUntilEnd.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
+            binding.timerTextView.text = DateUtils.formatElapsedTime(secondsUntilEnd)
+        })
 
         numberButtons = listOf(
             binding.buttonsLayout.get(0),

@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.app.game.sudoku.R
 import com.app.game.sudoku.databinding.FragmentHomeBinding
+import com.app.game.sudoku.ui.gameboard.GameboardFragment
+import com.app.game.sudoku.ui.gameboard.GameboardViewModel
 import com.app.game.sudoku.ui.level.LevelGameFragment
 
 class HomeFragment : Fragment() {
