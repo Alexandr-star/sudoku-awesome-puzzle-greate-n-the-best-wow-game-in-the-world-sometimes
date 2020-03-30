@@ -22,6 +22,8 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
     private var listener: GameboardView.OnTouchListener? = null
 
     private var cells: List<Cell>? = null
+    private var mistakesCells: MutableList<Pair<Int, Int>>? = null
+    private var mistakesBe: Boolean = false
 
     interface OnTouchListener {
         fun onCellTouched(row: Int, col: Int )
@@ -72,6 +74,12 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         color = Color.BLACK
     }
 
+    private val mistekesTextPaint = Paint().apply {
+        style = Paint.Style.FILL_AND_STROKE
+        color = Color.RED
+        textSize = 32F
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val sizePixels = min(widthMeasureSpec, heightMeasureSpec)
@@ -84,7 +92,7 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         fillCells(canvas)
         drawLines(canvas)
         drawText(canvas)
-
+        //drawMistakesText(canvas)
     }
 
     private fun updateMeasure(width: Int) {
@@ -95,139 +103,165 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         startingCellTextPaint.textSize = cellSizePixels / 1.5F
     }
 
-    private fun drawText(canvas: Canvas) {
-        cells?.forEach {cell ->
-            val value = cell.value
+    private fun drawMistakesText(canvas: Canvas) {
+        println(mistakesCells)
+        if (mistakesCells == null) {
+            // ошибок нет
+            println("NOT MISTAKE")
+            if (mistakesBe) {
+                // перекрасить в черный
+                println("BE MISTAKE SWITCH PAINT")
+            } else
+                println("NOT BE MISTAKE")
+                return
+        } else {
+            mistakesCells?.forEach { mistake ->
+                cells?.forEach { cell ->
+                    if ( (cell.row == mistake.first) && (cell.col == mistake.second)) {
+                        val stringValue = cell.value.toString()
+                        val paintToUse = if (cell.isStartingCell) startingCellTextPaint else mistekesTextPaint
+                        val textBounds = Rect()
+                        paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
 
 
-            if (value == 0) {
-                // draw notes
-                cell.notes.forEach { note ->
-                    val rowInCell = (note - 1) / sqrtSize
-                    val colInCell = (note - 1) % sqrtSize
-                    val stringValue = note.toString()
+                    }
+                }
+            }
+        }
+    }
+        private fun drawText(canvas: Canvas) {
+            cells?.forEach { cell ->
+                val value = cell.value
 
+
+                if (value == 0) {
+                    // draw notes
+                    cell.notes.forEach { note ->
+                        val rowInCell = (note - 1) / sqrtSize
+                        val colInCell = (note - 1) % sqrtSize
+                        val stringValue = note.toString()
+
+                        val textBounds = Rect()
+                        noteTextPaint.getTextBounds(stringValue, 0, stringValue.length, textBounds)
+                        val textWidth = noteTextPaint.measureText(stringValue)
+                        val textHeigth = textBounds.height()
+
+                        canvas.drawText(
+                            stringValue,
+                            (cell.col * cellSizePixels) + (colInCell * noteSizePixels) + noteSizePixels / 2 - textWidth / 2f,
+                            (cell.col * cellSizePixels) + (rowInCell * noteSizePixels) + noteSizePixels / 2 + textHeigth / 2f,
+                            noteTextPaint
+                        )
+                    }
+                } else {
+                    val row = cell.row
+                    val col = cell.col
+                    val stringValue = cell.value.toString()
+                    val paintToUse = if (cell.isStartingCell) startingCellTextPaint else textPaint
                     val textBounds = Rect()
-                    noteTextPaint.getTextBounds(stringValue, 0, stringValue.length, textBounds)
-                    val textWidth = noteTextPaint.measureText(stringValue)
-                    val textHeigth = textBounds.height()
+                    paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
+                    val textWidth = paintToUse.measureText(stringValue)
+                    val textHeidth = textBounds.height()
 
                     canvas.drawText(
                         stringValue,
-                        (cell.col * cellSizePixels) + (colInCell * noteSizePixels) + noteSizePixels / 2 - textWidth / 2f,
-                        (cell.col * cellSizePixels) + (rowInCell * noteSizePixels) + noteSizePixels / 2 + textHeigth / 2f,
-                         noteTextPaint
+                        (col * cellSizePixels) + cellSizePixels / 2 - textWidth / 2,
+                        (row * cellSizePixels) + cellSizePixels / 2 + textHeidth / 2,
+                        paintToUse
                     )
                 }
-            } else {
+            }
+        }
 
-                val row = cell.row
-                val col = cell.col
-                val stringValue = cell.value.toString()
-                val paintToUse = if (cell.isStartingCell) startingCellTextPaint else textPaint
-                val textBounds = Rect()
-                paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
-                val textWidth = paintToUse.measureText(stringValue)
-                val textHeidth = textBounds.height()
+        private fun fillCells(canvas: Canvas) {
+            cells?.forEach {
+                val row = it.row
+                val col = it.col
 
-                canvas.drawText(
-                    stringValue,
-                    (col * cellSizePixels) + cellSizePixels / 2 - textWidth / 2,
-                    (row * cellSizePixels) + cellSizePixels / 2 + textHeidth / 2,
+                if (it.isStartingCell) {
+                    fillCell(canvas, row, col, startingCellPaint)
+                } else if (row == selectedRow && col == selectedCall) {
+                    fillCell(canvas, row, col, selectedCellPaint)
+                } else if (row == selectedRow || col == selectedCall) {
+                    fillCell(canvas, row, col, conflictedCellPaint)
+                } else if (row / sqrtSize == selectedRow / sqrtSize && col / sqrtSize == selectedCall / sqrtSize) {
+                    fillCell(canvas, row, col, conflictedCellPaint)
+
+                }
+            }
+        }
+
+        private fun fillCell(canvas: Canvas, r: Int, c: Int, paint: Paint) {
+            canvas.drawRect(
+                c * cellSizePixels,
+                r * cellSizePixels,
+                (c + 1) * cellSizePixels,
+                (r + 1) * cellSizePixels,
+                paint
+            )
+        }
+
+        private fun drawLines(canvas: Canvas) {
+            canvas.drawRect(0F, 0F, width.toFloat(), width.toFloat(), thickLinePaint)
+            for (i in 1 until size) {
+                val paintToUse = when (1 % sqrtSize) {
+                    0 -> thickLinePaint
+                    else -> thinLinePaint
+                }
+                canvas.drawLine(
+                    i * cellSizePixels,
+                    0F,
+                    i * cellSizePixels,
+                    height.toFloat(),
+                    paintToUse
+                )
+
+                canvas.drawLine(
+                    0F,
+                    i * cellSizePixels,
+                    width.toFloat(),
+                    i * cellSizePixels,
                     paintToUse
                 )
             }
         }
-    }
 
-    private fun fillCells(canvas: Canvas) {
-        cells?.forEach {
-            val row = it.row
-            val col = it.col
-
-            if (it.isStartingCell) {
-                fillCell(canvas, row, col, startingCellPaint)
-            } else if (row == selectedRow && col == selectedCall) {
-                fillCell(canvas, row, col, selectedCellPaint)
-            } else if (row == selectedRow || col == selectedCall) {
-                fillCell(canvas, row, col, conflictedCellPaint)
-            } else if (row / sqrtSize == selectedRow / sqrtSize && col / sqrtSize == selectedCall / sqrtSize) {
-                fillCell(canvas, row, col, conflictedCellPaint)
-
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            return when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    handleTouchEvent(event.x, event.y)
+                    true
+                }
+                else -> false
             }
         }
-    }
 
-    private fun fillCell(canvas: Canvas, r: Int, c: Int, paint: Paint) {
-        canvas.drawRect(
-            c * cellSizePixels,
-            r * cellSizePixels,
-            (c + 1) * cellSizePixels,
-            (r + 1) * cellSizePixels,
-            paint
-        )
-    }
-
-    private fun drawLines(canvas: Canvas) {
-        canvas.drawRect(0F, 0F, width.toFloat(), width.toFloat(), thickLinePaint)
-        for (i in 1 until size) {
-            val paintToUse = when (1 % sqrtSize) {
-                0 -> thickLinePaint
-                else -> thinLinePaint
-            }
-            canvas.drawLine(
-                i * cellSizePixels,
-                0F,
-                i * cellSizePixels,
-                height.toFloat(),
-                paintToUse
-            )
-
-            canvas.drawLine(
-                0F,
-                i * cellSizePixels,
-                width.toFloat(),
-                i * cellSizePixels,
-                paintToUse
-            )
+        private fun handleTouchEvent(x: Float, y: Float) {
+            val possibleSelectedRow = (y / cellSizePixels).toInt()
+            val possibleSelectedCall = (x / cellSizePixels).toInt()
+            listener?.onCellTouched(possibleSelectedRow, possibleSelectedCall)
         }
-    }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                handleTouchEvent(event.x, event.y)
-                true
-            }
-            else -> false
+        fun updateSelectedCellUI(row: Int, col: Int) {
+            selectedCall = col
+            selectedRow = row
+            invalidate()
         }
-    }
 
-    private fun handleTouchEvent(x: Float, y: Float) {
-        val possibleSelectedRow = (y / cellSizePixels).toInt()
-        val possibleSelectedCall = (x / cellSizePixels).toInt()
-        listener?.onCellTouched(possibleSelectedRow, possibleSelectedCall)
-    }
+        fun registerListener(listener: OnTouchListener) {
+            this.listener = listener
+        }
 
-    fun updateSelectedCellUI(row: Int, col: Int) {
-        selectedCall = col
-        selectedRow = row
-        invalidate()
-    }
+        fun updateCells(cells: List<Cell>) {
+            this.cells = cells
+            invalidate()
+        }
 
-    fun registerListener(listener: OnTouchListener) {
-        this.listener = listener
-    }
-
-    fun updateCells(cells: List<Cell>) {
-        this.cells = cells
-        invalidate()
-    }
-
-    fun updateMistakesCells(cells: MutableList<Pair<Int, Int>>) {
-        //TODO: сделать яцейки с ошибками красными
-    }
-
+        fun updateMistakesCells(cells: MutableList<Pair<Int, Int>>) {
+            this.mistakesCells = cells
+            this.mistakesBe = true
+            invalidate()
+        }
 
 }
 

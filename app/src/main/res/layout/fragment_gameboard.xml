@@ -5,9 +5,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.gameboard.GameboardFragment">
 
+    <data>
+        <variable
+            name="setting"
+            type="com.app.game.sudoku.back.SettingGame"/>
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="400dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.437"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/levelTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="@={setting.level}"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/mistakesTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="mistakes"
+                android:visibility="visible" />
+        </LinearLayout>
 
 
         <com.app.game.sudoku.ui.gameboard.GameboardView
@@ -16,14 +50,28 @@
             android:layout_height="400dp"
             android:layout_above="@id/buttonsLayout"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="24dp"
             android:layout_marginEnd="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.423"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         </com.app.game.sudoku.ui.gameboard.GameboardView>
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            style="@android:style/Widget.DeviceDefault.ImageButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="24dp"
+            android:background="@color/colorAccent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_delete_button_wite_24dp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.789"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
             android:id="@+id/buttonsLayout"
@@ -31,10 +79,11 @@
             android:layout_height="46dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="123dp"
+            android:layout_marginBottom="132dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent">
 
 
@@ -113,35 +162,22 @@
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/deleteButton"
-            style="@android:style/Widget.DeviceDefault.ImageButton"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="24dp"
-            android:background="@color/colorAccent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_delete_button_wite_24dp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.789"
-            app:layout_constraintStart_toStartOf="parent" />
 
-<!--        <ImageButton-->
-<!--            android:id="@+id/notesButton"-->
-<!--            style="@android:style/Widget.DeviceDefault.Light.ImageButton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="20dp"-->
-<!--            android:scaleType="center"-->
-<!--            android:src="@drawable/ic_edit_pan_24dp"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.93"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/notesButton"-->
+        <!--            style="@android:style/Widget.DeviceDefault.Light.ImageButton"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="20dp"-->
+        <!--            android:scaleType="center"-->
+        <!--            android:src="@drawable/ic_edit_pan_24dp"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.93"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
+
 

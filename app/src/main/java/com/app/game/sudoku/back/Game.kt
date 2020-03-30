@@ -2,11 +2,9 @@ package com.app.game.sudoku.back
 
 import android.graphics.drawable.LevelListDrawable
 import androidx.lifecycle.MutableLiveData
+import java.util.*
 
-class Game {
-    private var mode = false
-    private var level = 0
-    private var countErrors: Int = 0
+class Game() {
     private val SIZE = 9
 
     var selectedCellLiveData = MutableLiveData<Pair<Int, Int>>()
@@ -14,6 +12,7 @@ class Game {
     var takingNotesLiveData = MutableLiveData<Boolean>()
     var highlightedKeysLiveData = MutableLiveData<Set<Int>>()
     var mistakesLiveData = MutableLiveData<MutableList<Pair<Int, Int>>>()
+    var mistakes: MutableList<Pair<Int, Int>> = arrayListOf()
 
     private var selectedRow = -1
     private var selectedCol = -1
@@ -22,7 +21,19 @@ class Game {
     private val board: Board
     private var grid: Array<IntArray> = Array(SIZE) { IntArray(SIZE) }
 
+    var time = 0
+    var countMiss = 0
+    var level = "NULL"
+    var mode = -1
 
+    fun setSetting( level: Int,  mode: Int) {
+        when(level) {
+            1 -> this.level = "easy"
+            2 -> this.level = "medium"
+            3 -> this.level = "hard"
+        }
+        this.mode = mode
+    }
 
     init {
         val sudoku = Sudoku()
@@ -43,7 +54,6 @@ class Game {
         cellsLiveData.postValue(board.cells)
         takingNotesLiveData.postValue(isTakingNots)
     }
-
 
     fun handleInput(number: Int) {
         if (selectedRow == -1 || selectedCol == -1) return
@@ -99,24 +109,17 @@ class Game {
         cellsLiveData.postValue(board.cells)
     }
 
-    fun setSettingGame(mode: Boolean, level: Int) {
-        this.mode = mode
-        this.level = level
-    }
-
-
     fun checkMistakes() {
         val cell = board.getCell(selectedRow, selectedCol)
-        var mistakes: MutableList<Pair<Int, Int>> = arrayListOf()
         println(mistakes)
-        isInBox(cell, mistakes)
-        isInCol(cell, mistakes)
-        isInRow(cell, mistakes)
+        isInBox(cell)
+        isInCol(cell)
+        isInRow(cell)
         mistakesLiveData.postValue(mistakes)
 
     }
 
-    private fun isInBox(cell: Cell, mistakes: MutableList<Pair<Int, Int>>) {
+    private fun isInBox(cell: Cell) {
         var r = selectedRow - selectedRow % 3;
         var c = selectedCol - selectedCol % 3;
 
@@ -131,7 +134,7 @@ class Game {
 
     }
 
-    private fun isInCol(cell: Cell, mistakes: MutableList<Pair<Int, Int>>){
+    private fun isInCol(cell: Cell){
         for (i in 0 until SIZE) {
             if (board.getCell(i, selectedCol).value == cell.value && i != selectedRow) {
                 mistakes.add(Pair(i, selectedCol))
@@ -139,7 +142,7 @@ class Game {
         }
     }
 
-    private fun isInRow(cell: Cell, mistakes: MutableList<Pair<Int, Int>>) {
+    private fun isInRow(cell: Cell) {
         for (i in 0 until SIZE) {
             if (board.getCell(selectedRow, i).value == cell.value && i != selectedCol) {
                 mistakes.add(Pair(selectedRow, selectedCol))

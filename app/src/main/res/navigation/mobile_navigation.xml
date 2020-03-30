@@ -16,9 +16,6 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_level_time"
             app:destination="@id/navigation_level" />
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_level_time2"
-            app:destination="@id/navigation_level_time" />
     </fragment>
 
     <fragment
@@ -35,24 +32,13 @@
 
     <fragment
         android:id="@+id/navigation_level"
-        android:name="com.app.game.sudoku.ui.level.ClassicLevelGameFragment"
+        android:name="com.app.game.sudoku.ui.level.LevelGameFragment"
         android:label="@string/title_level"
         tools:layout="@layout/fragment_level" >
         <action
             android:id="@+id/action_navigation_level_to_navigation_gameboard"
             app:destination="@id/navigation_gameboard" />
     </fragment>
-
-    <fragment
-        android:id="@+id/navigation_level_time"
-        android:name="com.app.game.sudoku.ui.level.TimeLevelGameFragment"
-        android:label="@string/title_level"
-        tools:layout="@layout/fragment_level_time" >
-        <action
-            android:id="@+id/action_navigation_level_time_to_navigation_gameboard"
-            app:destination="@id/navigation_gameboard" />
-    </fragment>
-
 
 
 </navigation>

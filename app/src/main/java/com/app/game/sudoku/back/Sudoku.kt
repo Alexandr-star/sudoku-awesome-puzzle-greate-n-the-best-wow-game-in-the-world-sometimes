@@ -1,9 +1,5 @@
 package com.app.game.sudoku.back
 
-import androidx.lifecycle.ViewModelStore
-import com.app.game.sudoku.ui.gameboard.GameboardViewModel
-import com.app.game.sudoku.ui.home.HomeFragment
-import com.app.game.sudoku.ui.level.ClassicLevelGameFragment
 import kotlin.math.pow
 import kotlin.random.Random
 
@@ -31,7 +27,6 @@ class Sudoku {
         initSudokuGrid()
         mixSudokuGrid()
         createFinalSudokuBoard()
-        printMat("grid in Sudoku class")
         return baseGrid
     }
 

@@ -1,32 +1,23 @@
 package com.app.game.sudoku.ui.gameboard
 
-import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.app.game.sudoku.R
 import com.app.game.sudoku.back.Cell
+import com.app.game.sudoku.back.SettingGame
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
 import com.app.game.sudoku.ui.gameboard.GameboardView.OnTouchListener
-import com.app.game.sudoku.ui.level.ClassicLevelGameViewModel
-import com.app.game.sudoku.ui.level.TimeLevelGameViewModel
+import com.app.game.sudoku.ui.level.LevelGameViewModel
 import kotlinx.android.synthetic.main.fragment_gameboard.*
-import kotlinx.android.synthetic.main.fragment_gameboard.view.*
 
 class GameboardFragment : Fragment(), OnTouchListener {
     private lateinit var gameboardViewModel: GameboardViewModel
-    private lateinit var classicLevelGameViewModel: ClassicLevelGameViewModel
-    private lateinit var timeLevelGameViewModel: TimeLevelGameViewModel
 
     private lateinit var numberButtons: List<View>
 
@@ -41,28 +32,19 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
         binding.root.findViewById<GameboardView>(R.id.gameBoardView).registerListener(this)
 
-        classicLevelGameViewModel = ViewModelProvider(this).get(ClassicLevelGameViewModel::class.java)
-        timeLevelGameViewModel = ViewModelProvider(this).get(TimeLevelGameViewModel::class.java)
         gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
 
-        if (classicLevelGameViewModel.settingGame.getLevel() == 0) {
-            gameboardViewModel.game.setSettingGame(
-                timeLevelGameViewModel.settingGame.getMode(),
-                timeLevelGameViewModel.settingGame.getLevel()
-            )
-        } else {
-            gameboardViewModel.game.setSettingGame(
-                classicLevelGameViewModel.settingGame.getMode(),
-                classicLevelGameViewModel.settingGame.getLevel()
-            )
-        }
+        val level = arguments!!.getInt("level")
+        val mode = arguments!!.getInt("mode")
 
-
+        gameboardViewModel.game.setSetting(level, mode)
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
-//        gameboardViewModel.game.takingNotesLiveData.observe(viewLifecycleOwner, Observer { updateNoteTakingUI(it) })
-//        gameboardViewModel.game.highlightedKeysLiveData.observe(viewLifecycleOwner, Observer {updateHighlightedKeys(it) })
+        gameboardViewModel.setting.level = gameboardViewModel.game.level
+        gameboardViewModel.setting.mode = gameboardViewModel.game.mode
 
+        println("setting is ${gameboardViewModel.setting.level}, ${gameboardViewModel.setting.mode}")
+        binding.setting = gameboardViewModel.setting
 
         numberButtons = listOf(
             binding.buttonsLayout.get(0),
