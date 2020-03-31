@@ -24,8 +24,8 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
     private lateinit var numberButtons: List<View>
 
-    var levelGame = "NULL"
-    var modeGame = -1
+    private lateinit var levelGame: String
+    private var modeGame: Int = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,18 +41,16 @@ class GameboardFragment : Fragment(), OnTouchListener {
         gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
         val level = arguments!!.getInt("level")
         val mode = arguments!!.getInt("mode")
+        initlevelandmode(level, mode)
 
-        when(level) {
-            1 -> levelGame = "easy"
-            2 -> levelGame = "medium"
-            3 -> levelGame = "hard"
-        }
-        modeGame = mode
         gameboardViewModel.function(levelGame, modeGame)
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
 
-        binding.setting = gameboardViewModel.game
+        binding.game = gameboardViewModel.game
+        gameboardViewModel.game.mistakesCountLiveData.observe(viewLifecycleOwner, Observer { missCount ->
+            binding.mistakesTextView.text = missCount
+        })
 
         gameboardViewModel.game.secondsUntilEnd.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
             binding.timerTextView.text = DateUtils.formatElapsedTime(secondsUntilEnd)
@@ -72,7 +70,6 @@ class GameboardFragment : Fragment(), OnTouchListener {
         numberButtons.forEachIndexed { index, button ->
             button.setOnClickListener{
                 gameboardViewModel.game.handleInput(index + 1)
-                gameboardViewModel.game.checkMistakes()
                 gameboardViewModel.game.mistakesLiveData.observe(viewLifecycleOwner, Observer { updateCellsWithMistakes(it) })
             }
         }
@@ -82,8 +79,8 @@ class GameboardFragment : Fragment(), OnTouchListener {
         return binding.root
     }
 
-    private fun updateCellsWithMistakes(cells: MutableList<Pair<Int, Int>>) {
-        gameBoardView.updateMistakesCells(cells)
+    private fun updateCellsWithMistakes(mistakeCell: Cell) {
+        gameBoardView.updateMistakesCells(mistakeCell)
     }
 
 //    private fun updateHighlightedKeys(set: Set<Int>?) = set?.let {
@@ -110,6 +107,15 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
     override fun onCellTouched(row: Int, col: Int) {
         gameboardViewModel.game.updateSelectedCell(row, col)
+    }
+
+    private fun initlevelandmode(level: Int, mode: Int) {
+        when(level) {
+            1 -> levelGame = "easy"
+            2 -> levelGame = "medium"
+            3 -> levelGame = "hard"
+        }
+        modeGame = mode
     }
 
 }

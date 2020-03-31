@@ -7,8 +7,9 @@
 
     <data>
         <variable
-            name="setting"
+            name="game"
             type="com.app.game.sudoku.back.Game"/>
+
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
-                android:text="@={setting.level}"
+                android:text="@={game.level}"
                 android:visibility="visible" />
 
             <TextView
@@ -39,7 +40,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="mistakes"
                 android:visibility="visible" />
 
             <TextView

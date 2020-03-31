@@ -2,6 +2,7 @@ package com.app.game.sudoku.back
 
 import android.graphics.drawable.LevelListDrawable
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.app.game.sudoku.back.Game.Companion.GAME_TIME
@@ -10,12 +11,13 @@ import java.util.*
 
 class Game(var level: String, var mode: Int) {
     private val SIZE = 9
+    private val SIZE_MISS = 3
 
     companion object {
         // This is the number of milliseconds in a second
         const val ONE_SECOND = 1000L
         // This is the total time of the game
-        const val GAME_TIME = 10 * ONE_SECOND
+        const val GAME_TIME = 1000 * ONE_SECOND
     }
 
     private val timer: CountDownTimer
@@ -33,8 +35,10 @@ class Game(var level: String, var mode: Int) {
     var cellsLiveData = MutableLiveData<List<Cell>>()
     var takingNotesLiveData = MutableLiveData<Boolean>()
     var highlightedKeysLiveData = MutableLiveData<Set<Int>>()
-    var mistakesLiveData = MutableLiveData<MutableList<Pair<Int, Int>>>()
-    var mistakes: MutableList<Pair<Int, Int>> = arrayListOf()
+    var mistakesLiveData = MutableLiveData<Cell>()
+    lateinit var mistakes: Cell
+    var mistakesCountLiveData = MutableLiveData<String>()
+    private var countMiss = 0
 
     private var selectedRow = -1
     private var selectedCol = -1
@@ -42,9 +46,6 @@ class Game(var level: String, var mode: Int) {
 
     private val board: Board
     private var grid: Array<IntArray> = Array(SIZE) { IntArray(SIZE) }
-
-    var time = 0
-    var countMiss = 0
 
     init {
         val sudoku = Sudoku()
@@ -64,6 +65,7 @@ class Game(var level: String, var mode: Int) {
         selectedCellLiveData.postValue(Pair(selectedRow, selectedCol))
         cellsLiveData.postValue(board.cells)
         takingNotesLiveData.postValue(isTakingNots)
+        mistakesCountLiveData.postValue(missToString(countMiss))
 
         if (mode == 2) {
             println("game.mode ${mode} time")
@@ -97,6 +99,10 @@ class Game(var level: String, var mode: Int) {
         }
     }
 
+    private fun missToString(countMiss: Int): String {
+        return "${countMiss}/${SIZE_MISS}"
+    }
+
 
     fun handleInput(number: Int) {
         if (selectedRow == -1 || selectedCol == -1) return
@@ -114,6 +120,7 @@ class Game(var level: String, var mode: Int) {
             cell.value = number
         }
         cellsLiveData.postValue(board.cells)
+        checkMistakes(cell)
     }
 
     fun updateSelectedCell(row: Int, col: Int) {
@@ -149,47 +156,62 @@ class Game(var level: String, var mode: Int) {
         } else {
             cell.value = 0
         }
+        cell.value = 0
         cellsLiveData.postValue(board.cells)
+        checkMistakes(cell)
     }
 
-    fun checkMistakes() {
-        val cell = board.getCell(selectedRow, selectedCol)
-        println(mistakes)
-        isInBox(cell)
-        isInCol(cell)
-        isInRow(cell)
-        mistakesLiveData.postValue(mistakes)
+    private fun checkMistakes(cell: Cell) {
+        if (isInBoxMiss(cell) || isInColMiss(cell) || isInRowMiss(cell)) {
+            mistakesCountLiveData.postValue(missToString(++countMiss))
+            Log.i("Game", "MISTAKE IS  (${mistakes.row}; ${mistakes.col})")
+            Log.i("Game", "MISTAKE IS ${mistakesCountLiveData}")
 
+        }
     }
 
-    private fun isInBox(cell: Cell) {
+    private fun isInBoxMiss(cell: Cell): Boolean {
         var r = selectedRow - selectedRow % 3;
         var c = selectedCol - selectedCol % 3;
 
         for (i in r until r + 3) {
             for (j in c until c + 3) {
                 if (board.getCell(i, j).value == cell.value &&
-                    (i == selectedRow && j == selectedCol)) {
-                    mistakes.add(Pair(i, j))
+                    (i != selectedRow && j != selectedCol) &&
+                    board.getCell(i, j).value != 0) {
+                    mistakes = cell
+                    Log.i("Game Box", "${cell.value}")
+                    return true
                 }
             }
         }
-
+        return false
     }
 
-    private fun isInCol(cell: Cell){
+    private fun isInColMiss(cell: Cell): Boolean{
         for (i in 0 until SIZE) {
-            if (board.getCell(i, selectedCol).value == cell.value && i != selectedRow) {
-                mistakes.add(Pair(i, selectedCol))
+            if (board.getCell(i, selectedCol).value == cell.value &&
+                i != selectedRow &&
+                board.getCell(i, selectedCol).value != 0) {
+                Log.i("Game Col", "${cell.value}")
+                mistakes = cell
+                return true
             }
         }
+        return false
     }
 
-    private fun isInRow(cell: Cell) {
+    private fun isInRowMiss(cell: Cell): Boolean {
         for (i in 0 until SIZE) {
-            if (board.getCell(selectedRow, i).value == cell.value && i != selectedCol) {
-                mistakes.add(Pair(selectedRow, selectedCol))
+            if (board.getCell(selectedRow, i).value == cell.value &&
+                i != selectedCol &&
+                board.getCell(selectedRow, i).value != 0) {
+                Log.i("Game Row", "${cell.value}")
+
+                mistakes = cell
+                return true
             }
         }
+        return false
     }
 }

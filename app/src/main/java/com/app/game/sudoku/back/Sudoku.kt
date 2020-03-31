@@ -17,9 +17,7 @@ class Sudoku {
         for (i in 0 until n * n) {
             for (j in 0 until n * n) {
                 baseGrid[i][j] = ((i * n + i / n + j) % (n * n) + 1)
-                print("${baseGrid[i][j]} ")
             }
-            println()
         }
     }
 
@@ -47,7 +45,6 @@ class Sudoku {
                 else -> transposeBaseGrid()
             }
         }
-        printMat("mixed")
     }
 
     private fun createFinalSudokuBoard() {
@@ -74,10 +71,6 @@ class Sudoku {
                 }
             }
         }
-
-        println("result")
-        println("difficult = ${difficult}")
-        printMat()
     }
 
     private fun solve(board: Array<IntArray>): Boolean {

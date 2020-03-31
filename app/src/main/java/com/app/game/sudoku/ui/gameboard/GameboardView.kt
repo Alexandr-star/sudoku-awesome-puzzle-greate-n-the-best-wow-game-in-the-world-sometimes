@@ -3,6 +3,7 @@ package com.app.game.sudoku.ui.gameboard
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.app.game.sudoku.back.Cell
@@ -22,7 +23,7 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
     private var listener: GameboardView.OnTouchListener? = null
 
     private var cells: List<Cell>? = null
-    private var mistakesCells: MutableList<Pair<Int, Int>>? = null
+    private var  mistakesCell: Cell? = null
     private var mistakesBe: Boolean = false
 
     interface OnTouchListener {
@@ -104,35 +105,32 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
     }
 
     private fun drawMistakesText(canvas: Canvas) {
-        println(mistakesCells)
-        if (mistakesCells == null) {
+        println(mistakesCell)
+        if (mistakesCell == null) {
             // ошибок нет
-            println("NOT MISTAKE")
+            Log.i("CHECKMISS GameboardView", "NOT MISTAKE")
             if (mistakesBe) {
                 // перекрасить в черный
-                println("BE MISTAKE SWITCH PAINT")
+                Log.i("CHECKMISS GameboardView", "BE MISTAKE SWITCH PAINT")
             } else
-                println("NOT BE MISTAKE")
+                Log.i("CHECKMISS GameboardView", "NOT BE MISTAKE")
                 return
         } else {
-            mistakesCells?.forEach { mistake ->
-                cells?.forEach { cell ->
-                    if ( (cell.row == mistake.first) && (cell.col == mistake.second)) {
-                        val stringValue = cell.value.toString()
-                        val paintToUse = if (cell.isStartingCell) startingCellTextPaint else mistekesTextPaint
-                        val textBounds = Rect()
-                        paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
 
-
-                    }
+            cells?.forEach { cell ->
+                if ( (cell.row == mistakesCell!!.row) && (cell.col == mistakesCell!!.col)) {
+                    val stringValue = cell.value.toString()
+                    val paintToUse = if (cell.isStartingCell) startingCellTextPaint else mistekesTextPaint
+                    val textBounds = Rect()
+                    paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
                 }
             }
         }
     }
+
         private fun drawText(canvas: Canvas) {
             cells?.forEach { cell ->
                 val value = cell.value
-
 
                 if (value == 0) {
                     // draw notes
@@ -257,8 +255,8 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
             invalidate()
         }
 
-        fun updateMistakesCells(cells: MutableList<Pair<Int, Int>>) {
-            this.mistakesCells = cells
+        fun updateMistakesCells(cell: Cell) {
+            this.mistakesCell = cell
             this.mistakesBe = true
             invalidate()
         }
