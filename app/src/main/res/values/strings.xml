@@ -1,18 +1,31 @@
 <resources>
+    <!--    titles-->
     <string name="app_name">Sudoku</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Statistic</string>
     <string name="title_gameboard">Game</string>
     <string name="title_level">Levels</string>
-    <string name="classicGameButton">Start Classic</string>
+    <string name="title_pause">Pause</string>
+    <string name="title_gameEnd">End Game</string>
+
+    <!--  ui buttons  -->
     <string name="resumeButton">Resume</string>
+
+    <string name="classicGameButton">Start Classic</string>
     <string name="timeGameButton">Start Time</string>
+
     <string name="level_easy">Easy</string>
     <string name="level_medium">Medium</string>
     <string name="level_hard">Hard</string>
+
+    <string name="homeButton">Home</string>
+    <string name="endGame">End Game</string>
+
+    <!--  textView  -->
     <string name="classicGame">Classic Game</string>
     <string name="timeGame">Time Game</string>
-    <!--    buttons num-->
+
+    <!--   game buttons-->
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>

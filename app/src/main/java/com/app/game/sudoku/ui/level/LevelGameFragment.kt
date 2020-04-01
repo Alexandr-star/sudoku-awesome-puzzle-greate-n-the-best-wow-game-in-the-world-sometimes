@@ -14,7 +14,6 @@ import com.app.game.sudoku.databinding.FragmentLevelBinding
 import java.util.ArrayList
 
 class LevelGameFragment : Fragment() {
-    private lateinit var levelGameViewModel: LevelGameViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,8 +22,6 @@ class LevelGameFragment : Fragment() {
     ): View? {
         val binding: FragmentLevelBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_level, container, false)
-
-        levelGameViewModel = ViewModelProvider(this).get(LevelGameViewModel::class.java)
 
         val mode = arguments!!.getInt("modeSend")
         val bundleData = Bundle()

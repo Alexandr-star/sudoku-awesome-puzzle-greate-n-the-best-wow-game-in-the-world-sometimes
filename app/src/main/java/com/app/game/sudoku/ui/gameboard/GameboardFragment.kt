@@ -1,16 +1,22 @@
 package com.app.game.sudoku.ui.gameboard
 
+import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Chronometer
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProviders.of
 import androidx.lifecycle.ViewModelStores.of
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.app.game.sudoku.R
 import com.app.game.sudoku.back.Cell
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
@@ -27,6 +33,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
     private lateinit var levelGame: String
     private var modeGame: Int = -1
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,22 +45,31 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
         binding.root.findViewById<GameboardView>(R.id.gameBoardView).registerListener(this)
 
+        val chronometer = binding.root.findViewById<Chronometer>(R.id.timerChron)
+
         gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
         val level = arguments!!.getInt("level")
         val mode = arguments!!.getInt("mode")
         initlevelandmode(level, mode)
 
         gameboardViewModel.function(levelGame, modeGame)
+        gameboardViewModel.game.secondsUntil.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
+            binding.timerChron.text = DateUtils.formatElapsedTime(secondsUntilEnd)
+        })
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
-
+        gameboardViewModel.game.timerOn(chronometer)
         binding.game = gameboardViewModel.game
         gameboardViewModel.game.mistakesCountLiveData.observe(viewLifecycleOwner, Observer { missCount ->
             binding.mistakesTextView.text = missCount
         })
 
-        gameboardViewModel.game.secondsUntilEnd.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
-            binding.timerTextView.text = DateUtils.formatElapsedTime(secondsUntilEnd)
+
+        gameboardViewModel.game.eventGameFinish.observe(viewLifecycleOwner, Observer {finished ->
+            if (finished) {
+                gameFinished()
+                gameboardViewModel.game.onGameFinishComplete()
+            }
         })
 
         numberButtons = listOf(
@@ -77,6 +93,13 @@ class GameboardFragment : Fragment(), OnTouchListener {
         binding.deleteButton.setOnClickListener {gameboardViewModel.game.deleteNumInCell()}
 
         return binding.root
+    }
+
+    private fun gameFinished() {
+        gameboardViewModel.game.stopTimer()
+        this.findNavController().navigate(
+            R.id.action_navigation_gameboard_to_navigation_end
+        )
     }
 
     private fun updateCellsWithMistakes(mistakeCell: Cell) {

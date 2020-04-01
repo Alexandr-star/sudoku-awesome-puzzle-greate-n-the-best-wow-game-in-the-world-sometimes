@@ -28,7 +28,14 @@
         android:id="@+id/navigation_gameboard"
         android:name="com.app.game.sudoku.ui.gameboard.GameboardFragment"
         android:label="@string/title_gameboard"
-        tools:layout="@layout/fragment_gameboard" />
+        tools:layout="@layout/fragment_gameboard" >
+        <action
+            android:id="@+id/action_navigation_gameboard_to_navigation_pause"
+            app:destination="@id/navigation_pause" />
+        <action
+            android:id="@+id/action_navigation_gameboard_to_navigation_end"
+            app:destination="@id/navigation_end" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_level"
@@ -38,6 +45,23 @@
         <action
             android:id="@+id/action_navigation_level_to_navigation_gameboard"
             app:destination="@id/navigation_gameboard" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_pause"
+        android:name="com.app.game.sudoku.ui.gamevent.GamePauseFragment"
+        android:label="@string/title_pause"
+        tools:layout="@layout/fragment_pausegame"/>
+
+    <fragment
+        android:id="@+id/navigation_end"
+        android:name="com.app.game.sudoku.ui.gamevent.EndGameFragment"
+        android:label="@string/title_gameEnd"
+        tools:layout="@layout/fragment_game_end">
+
+        <action
+            android:id="@+id/action_navigation_end_to_navigation_home"
+            app:destination="@id/navigation_home" />
     </fragment>
 
 

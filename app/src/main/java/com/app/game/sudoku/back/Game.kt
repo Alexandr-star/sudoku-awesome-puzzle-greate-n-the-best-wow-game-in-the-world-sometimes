@@ -1,30 +1,37 @@
 package com.app.game.sudoku.back
 
-import android.graphics.drawable.LevelListDrawable
+import android.os.Build
 import android.os.CountDownTimer
+import android.os.SystemClock
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.app.game.sudoku.back.Game.Companion.GAME_TIME
-import com.app.game.sudoku.ui.gameboard.GameboardViewModel
-import java.util.*
+import com.app.game.sudoku.ui.gameboard.GameboardFragment
+import android.widget.Chronometer as Chronometer
+
 
 class Game(var level: String, var mode: Int) {
     private val SIZE = 9
     private val SIZE_MISS = 3
 
+    lateinit var gameboardFragment: GameboardFragment
+
     companion object {
         // This is the number of milliseconds in a second
         const val ONE_SECOND = 1000L
         // This is the total time of the game
-        const val GAME_TIME = 1000 * ONE_SECOND
+        const val GAME_TIME_EASY = 600 * ONE_SECOND
+        const val GAME_TIME_MEDIUM = 1200 * ONE_SECOND
+        const val GAME_TIME_HARD = 1800 * ONE_SECOND
     }
 
-    private val timer: CountDownTimer
+    private lateinit var timerDown: CountDownTimer
+    private lateinit var timer: Chronometer
 
-    private var _secondsUntilEnd = MutableLiveData<Long>()
-    val secondsUntilEnd: LiveData<Long>
-        get() = _secondsUntilEnd
+    private var _secondsUntil = MutableLiveData<Long>()
+    val secondsUntil: LiveData<Long>
+        get() = _secondsUntil
 
     // Event which triggers the end of the game
     private val _eventGameFinish = MutableLiveData<Boolean>()
@@ -67,42 +74,55 @@ class Game(var level: String, var mode: Int) {
         takingNotesLiveData.postValue(isTakingNots)
         mistakesCountLiveData.postValue(missToString(countMiss))
 
-        if (mode == 2) {
-            println("game.mode ${mode} time")
-            timer = object : CountDownTimer(
-                GAME_TIME,
-                ONE_SECOND
-            ) {
-                override fun onTick(millisUntilFinished: Long) {
-                    _secondsUntilEnd.value = millisUntilFinished / ONE_SECOND
-                }
-                override fun onFinish() {
-                    //TODO: установка флага о том, что игра завершена
-                }
-            }
-            timer.start()
-        } else {
-            println("game.mode ${mode} classic")
-            timer = object : CountDownTimer(
-                GAME_TIME,
-                ONE_SECOND
-            ) {
-                override fun onTick(millisUntilFinished: Long) {
-                    _secondsUntilEnd.value = millisUntilFinished * ONE_SECOND
-                }
 
-                override fun onFinish() {
-                    TODO("Not yet implemented")
-                }
-            }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun timerOn(chron: Chronometer) {
+        this.timer = chron
+        if (mode == 1) {
             timer.start()
+            timer.setOnChronometerTickListener { timer ->
+                _secondsUntil.value = (SystemClock.elapsedRealtime() - timer.base) / ONE_SECOND + 1
+                Log.i("Timer CLASSIC", "${_secondsUntil.value}")
+            }
+        } else if (mode == 2) {
+            when(level) {
+                "easy" -> countDown(GAME_TIME_EASY)
+                "medium" -> countDown(GAME_TIME_MEDIUM)
+                "hard" -> countDown(GAME_TIME_HARD)
+            }
         }
+    }
+
+    private fun countDown(levelTime: Long) {
+        this.timerDown = object : CountDownTimer(
+            levelTime,
+            ONE_SECOND
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                _secondsUntil.value = millisUntilFinished / ONE_SECOND
+                Log.i("Game TIMER", "${_secondsUntil.value}")
+            }
+            override fun onFinish() {
+                onGameFinishComplete()
+            }
+        }
+        timerDown.start()
+    }
+
+    fun stopTimer() {
+        timer.stop()
+        timerDown.onFinish()
+    }
+
+    fun onGameFinishComplete() {
+        _eventGameFinish.value = false
     }
 
     private fun missToString(countMiss: Int): String {
         return "${countMiss}/${SIZE_MISS}"
     }
-
 
     fun handleInput(number: Int) {
         if (selectedRow == -1 || selectedCol == -1) return
@@ -121,6 +141,12 @@ class Game(var level: String, var mode: Int) {
         }
         cellsLiveData.postValue(board.cells)
         checkMistakes(cell)
+
+        if (countMiss == SIZE_MISS) {
+            _eventGameFinish.value = true
+            timer.stop()
+            timerDown.onFinish()
+        }
     }
 
     fun updateSelectedCell(row: Int, col: Int) {
@@ -166,7 +192,12 @@ class Game(var level: String, var mode: Int) {
             mistakesCountLiveData.postValue(missToString(++countMiss))
             Log.i("Game", "MISTAKE IS  (${mistakes.row}; ${mistakes.col})")
             Log.i("Game", "MISTAKE IS ${mistakesCountLiveData}")
-
+        } else {
+            if (board.isBoardFull()) {
+                _eventGameFinish.value = true
+                timer.stop()
+                timerDown.onFinish()
+            }
         }
     }
 
