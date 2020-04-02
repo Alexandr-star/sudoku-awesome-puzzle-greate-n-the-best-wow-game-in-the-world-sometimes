@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.app.game.sudoku.R
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
+import com.app.game.sudoku.databinding.FragmentPausegameBinding
 
 class GamePauseFragment : Fragment() {
     private lateinit var gamePauseViewModel: GamePauseViewModel
@@ -17,8 +20,17 @@ class GamePauseFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentGameboardBinding = DataBindingUtil.inflate(
+        val binding: FragmentPausegameBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_pausegame, container, false)
+
+        gamePauseViewModel = ViewModelProvider(this).get(GamePauseViewModel::class.java)
+
+        binding.endGame.setOnClickListener { v: View ->
+            v.findNavController().navigate(
+                R.id.action_navigation_pause_to_navigation_home
+            )
+        }
+
 
         return binding.root
     }

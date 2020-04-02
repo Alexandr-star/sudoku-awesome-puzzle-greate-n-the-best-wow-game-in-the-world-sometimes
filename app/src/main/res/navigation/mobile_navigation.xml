@@ -15,7 +15,8 @@
             app:destination="@id/navigation_level" />
         <action
             android:id="@+id/action_navigation_home_to_navigation_level_time"
-            app:destination="@id/navigation_level" />
+            app:destination="@id/navigation_level"
+            app:popUpTo="@id/navigation_home" />
     </fragment>
 
     <fragment
@@ -31,10 +32,12 @@
         tools:layout="@layout/fragment_gameboard" >
         <action
             android:id="@+id/action_navigation_gameboard_to_navigation_pause"
-            app:destination="@id/navigation_pause" />
+            app:destination="@id/navigation_pause"
+            app:popUpTo="@id/navigation_gameboard" />
         <action
             android:id="@+id/action_navigation_gameboard_to_navigation_end"
-            app:destination="@id/navigation_end" />
+            app:destination="@id/navigation_end"
+            app:popUpTo="@id/navigation_home" />
     </fragment>
 
     <fragment
@@ -44,14 +47,19 @@
         tools:layout="@layout/fragment_level" >
         <action
             android:id="@+id/action_navigation_level_to_navigation_gameboard"
-            app:destination="@id/navigation_gameboard" />
+            app:destination="@id/navigation_gameboard"
+            app:popUpTo="@id/navigation_home" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_pause"
         android:name="com.app.game.sudoku.ui.gamevent.GamePauseFragment"
         android:label="@string/title_pause"
-        tools:layout="@layout/fragment_pausegame"/>
+        tools:layout="@layout/fragment_pausegame">
+        <action
+            android:id="@+id/action_navigation_pause_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_end"
@@ -61,7 +69,8 @@
 
         <action
             android:id="@+id/action_navigation_end_to_navigation_home"
-            app:destination="@id/navigation_home" />
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home" />
     </fragment>
 
 

@@ -98,6 +98,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
 //        binding.notesButton.setOnClickListener{gameboardViewModel.game.changeNoteTakingState()}
         binding.deleteButton.setOnClickListener {gameboardViewModel.game.deleteNumInCell()}
 
+        setHasOptionsMenu(true)
         return binding.root
     }
 

@@ -144,8 +144,7 @@ class Game(var level: String, var mode: Int) {
 
         if (countMiss == SIZE_MISS) {
             onGameFinishComplete()
-            timer.stop()
-            timerDown.onFinish()
+            stopTimer()
         }
     }
 
