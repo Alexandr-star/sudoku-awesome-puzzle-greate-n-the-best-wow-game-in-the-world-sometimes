@@ -15,6 +15,7 @@ class Game(var level: String, var mode: Int) {
     private val SIZE = 9
     private val SIZE_MISS = 3
 
+
     lateinit var gameboardFragment: GameboardFragment
 
     companion object {
@@ -37,6 +38,8 @@ class Game(var level: String, var mode: Int) {
     private val _eventGameFinish = MutableLiveData<Boolean>()
     val eventGameFinish: LiveData<Boolean>
         get() = _eventGameFinish
+
+    var isWinGame = MutableLiveData<Boolean>(true)
 
     var selectedCellLiveData = MutableLiveData<Pair<Int, Int>>()
     var cellsLiveData = MutableLiveData<List<Cell>>()
@@ -77,6 +80,8 @@ class Game(var level: String, var mode: Int) {
 
     }
 
+
+
     @RequiresApi(Build.VERSION_CODES.N)
     fun timerOn(chron: Chronometer) {
         this.timer = chron
@@ -106,19 +111,14 @@ class Game(var level: String, var mode: Int) {
             }
             override fun onFinish() {
                 onGameFinishComplete()
+                isWinGame.value = false
+
             }
         }
         timerDown.start()
     }
 
-    fun stopTimer() {
-        timer.stop()
-        timerDown.onFinish()
-    }
 
-    fun onGameFinishComplete() {
-        _eventGameFinish.value = false
-    }
 
     private fun missToString(countMiss: Int): String {
         return "${countMiss}/${SIZE_MISS}"
@@ -143,7 +143,7 @@ class Game(var level: String, var mode: Int) {
         checkMistakes(cell)
 
         if (countMiss == SIZE_MISS) {
-            _eventGameFinish.value = true
+            onGameFinishComplete()
             timer.stop()
             timerDown.onFinish()
         }
@@ -194,9 +194,9 @@ class Game(var level: String, var mode: Int) {
             Log.i("Game", "MISTAKE IS ${mistakesCountLiveData}")
         } else {
             if (board.isBoardFull()) {
-                _eventGameFinish.value = true
-                timer.stop()
-                timerDown.onFinish()
+                stopTimer()
+                isWinGame.value = true
+                onGameFinishComplete()
             }
         }
     }
@@ -244,5 +244,14 @@ class Game(var level: String, var mode: Int) {
             }
         }
         return false
+    }
+
+    private fun onGameFinishComplete() {
+        _eventGameFinish.value = true
+    }
+
+    private fun stopTimer() {
+        if (mode == 1) timer.stop()
+        else timerDown.onFinish()
     }
 }

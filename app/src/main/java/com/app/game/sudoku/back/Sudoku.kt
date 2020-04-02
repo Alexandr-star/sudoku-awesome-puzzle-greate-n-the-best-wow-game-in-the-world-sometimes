@@ -7,8 +7,8 @@ class Sudoku {
     private val n = 3
     private val SIZE  = 9
     private val EMPTY  = 0
-    private val itter = 10
-    private var LEVEL = 25
+    private val itter = 20
+    private var LEVEL = 3
 
     private var baseGrid: Array<IntArray> =  Array(9) { IntArray(9) }
 

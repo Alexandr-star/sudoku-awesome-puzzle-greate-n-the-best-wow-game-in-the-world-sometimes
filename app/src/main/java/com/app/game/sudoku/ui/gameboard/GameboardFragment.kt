@@ -3,6 +3,7 @@ package com.app.game.sudoku.ui.gameboard
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.app.game.sudoku.R
 import com.app.game.sudoku.back.Cell
+import com.app.game.sudoku.database.GameStatDatabase
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
 import com.app.game.sudoku.ui.gameboard.GameboardView.OnTouchListener
 import kotlinx.android.synthetic.main.fragment_gameboard.*
@@ -40,6 +42,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
         savedInstanceState: Bundle?
     ): View? {
 
+
         val binding: FragmentGameboardBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_gameboard, container, false)
 
@@ -47,7 +50,11 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
         val chronometer = binding.root.findViewById<Chronometer>(R.id.timerChron)
 
-        gameboardViewModel = ViewModelProvider(this).get(GameboardViewModel::class.java)
+        val dao = GameStatDatabase.getInstance(inflater.context).getGameStatDatabaseDao()
+        val gameboardViewModelFactory = GameboardViewModelFactory(dao)
+        gameboardViewModel = ViewModelProvider(this, gameboardViewModelFactory)
+            .get(GameboardViewModel::class.java)
+
         val level = arguments!!.getInt("level")
         val mode = arguments!!.getInt("mode")
         initlevelandmode(level, mode)
@@ -68,7 +75,6 @@ class GameboardFragment : Fragment(), OnTouchListener {
         gameboardViewModel.game.eventGameFinish.observe(viewLifecycleOwner, Observer {finished ->
             if (finished) {
                 gameFinished()
-                gameboardViewModel.game.onGameFinishComplete()
             }
         })
 
@@ -96,10 +102,20 @@ class GameboardFragment : Fragment(), OnTouchListener {
     }
 
     private fun gameFinished() {
-        gameboardViewModel.game.stopTimer()
+        //gameboardViewModel.game.stopTimer()
+        gameboardViewModel.onStartTracking()
+        val bundleData = Bundle()
+        var endGameStatus = if (gameboardViewModel.game.isWinGame.value!!) "win" else "lose"
+        bundleData.putString("gameStatus", endGameStatus)
+        Log.i("Game Finish", "${endGameStatus}")
         this.findNavController().navigate(
-            R.id.action_navigation_gameboard_to_navigation_end
+            R.id.action_navigation_gameboard_to_navigation_end,
+            bundleData
         )
+    }
+
+    private fun gamePause() {
+
     }
 
     private fun updateCellsWithMistakes(mistakeCell: Cell) {
