@@ -25,12 +25,6 @@ class GamePauseFragment : Fragment() {
 
         gamePauseViewModel = ViewModelProvider(this).get(GamePauseViewModel::class.java)
 
-        binding.endGame.setOnClickListener { v: View ->
-            v.findNavController().navigate(
-                R.id.action_navigation_pause_to_navigation_home
-            )
-        }
-
 
         return binding.root
     }

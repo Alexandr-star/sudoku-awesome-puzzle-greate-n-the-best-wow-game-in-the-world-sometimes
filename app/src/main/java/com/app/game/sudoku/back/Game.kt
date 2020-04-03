@@ -120,9 +120,7 @@ class Game(var level: String, var mode: Int) {
 
 
 
-    private fun missToString(countMiss: Int): String {
-        return "${countMiss}/${SIZE_MISS}"
-    }
+
 
     fun handleInput(number: Int) {
         if (selectedRow == -1 || selectedCol == -1) return
@@ -245,6 +243,10 @@ class Game(var level: String, var mode: Int) {
         return false
     }
 
+    private fun missToString(countMiss: Int): String {
+        return "${countMiss}/${SIZE_MISS}"
+    }
+
     private fun onGameFinishComplete() {
         _eventGameFinish.value = true
     }
@@ -252,5 +254,9 @@ class Game(var level: String, var mode: Int) {
     private fun stopTimer() {
         if (mode == 1) timer.stop()
         else timerDown.onFinish()
+    }
+
+    fun pauseGame() {
+
     }
 }

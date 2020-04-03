@@ -31,10 +31,6 @@
         android:label="@string/title_gameboard"
         tools:layout="@layout/fragment_gameboard" >
         <action
-            android:id="@+id/action_navigation_gameboard_to_navigation_pause"
-            app:destination="@id/navigation_pause"
-            app:popUpTo="@id/navigation_gameboard" />
-        <action
             android:id="@+id/action_navigation_gameboard_to_navigation_end"
             app:destination="@id/navigation_end"
             app:popUpTo="@id/navigation_home" />
@@ -55,11 +51,7 @@
         android:id="@+id/navigation_pause"
         android:name="com.app.game.sudoku.ui.gamevent.GamePauseFragment"
         android:label="@string/title_pause"
-        tools:layout="@layout/fragment_pausegame">
-        <action
-            android:id="@+id/action_navigation_pause_to_navigation_home"
-            app:destination="@id/navigation_home" />
-    </fragment>
+        tools:layout="@layout/fragment_pausegame"/>
 
     <fragment
         android:id="@+id/navigation_end"
