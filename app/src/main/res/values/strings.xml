@@ -22,8 +22,8 @@
     <string name="endGame">End Game</string>
 
     <!--  textView  -->
-    <string name="classicGame">Classic Game</string>
-    <string name="timeGame">Time Game</string>
+    <string name="classic_game">Classic Game</string>
+    <string name="time_game">Time Game</string>
 
     <!--   game buttons-->
     <string name="one">1</string>

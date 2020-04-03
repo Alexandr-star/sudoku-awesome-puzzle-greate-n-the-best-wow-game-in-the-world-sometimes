@@ -30,9 +30,12 @@ class Game(var level: String, var mode: Int) {
     private lateinit var timerDown: CountDownTimer
     private lateinit var timer: Chronometer
 
-    private var _secondsUntil = MutableLiveData<Long>()
-    val secondsUntil: LiveData<Long>
-        get() = _secondsUntil
+    var _secondsUntil = MutableLiveData<Long>()
+//    var secondsUntil: LiveData<Long>
+//        get() = _secondsUntil
+//        set(value) {
+//            _secondsUntil.value = value.value
+//        }
 
     // Event which triggers the end of the game
     private val _eventGameFinish = MutableLiveData<Boolean>()
@@ -48,22 +51,25 @@ class Game(var level: String, var mode: Int) {
     var mistakesLiveData = MutableLiveData<Cell>()
     lateinit var mistakes: Cell
     var mistakesCountLiveData = MutableLiveData<String>()
-    private var countMiss = 0
+    var countMiss = 0
 
     private var selectedRow = -1
     private var selectedCol = -1
     private var isTakingNots = false
 
-    private val board: Board
+    var board: Board
     private var grid: Array<IntArray> = Array(SIZE) { IntArray(SIZE) }
 
     init {
         val sudoku = Sudoku()
         grid = sudoku.getSudoku()
-
-
-        val cells = List(SIZE * SIZE) {i -> Cell(i / SIZE, i % SIZE, grid.get(i / SIZE).get(i % SIZE))}
-
+        val cells = List(SIZE * SIZE) { i ->
+            Cell(
+                i / SIZE,
+                i % SIZE,
+                grid.get(i / SIZE).get(i % SIZE)
+            )
+        }
         board = Board(SIZE, cells)
         for (r in 0 until SIZE) {
             for (c in 0 until SIZE) {
@@ -72,6 +78,7 @@ class Game(var level: String, var mode: Int) {
                 }
             }
         }
+
         selectedCellLiveData.postValue(Pair(selectedRow, selectedCol))
         cellsLiveData.postValue(board.cells)
         takingNotesLiveData.postValue(isTakingNots)
@@ -80,7 +87,9 @@ class Game(var level: String, var mode: Int) {
 
     }
 
-
+    fun getBoardInArrayList() {
+        val cells = board.cells
+    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun timerOn(chron: Chronometer) {
@@ -251,12 +260,8 @@ class Game(var level: String, var mode: Int) {
         _eventGameFinish.value = true
     }
 
-    private fun stopTimer() {
+    fun stopTimer() {
         if (mode == 1) timer.stop()
         else timerDown.onFinish()
-    }
-
-    fun pauseGame() {
-
     }
 }

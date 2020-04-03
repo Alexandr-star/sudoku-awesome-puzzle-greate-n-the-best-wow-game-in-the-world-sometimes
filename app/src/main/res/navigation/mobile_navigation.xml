@@ -17,6 +17,10 @@
             android:id="@+id/action_navigation_home_to_navigation_level_time"
             app:destination="@id/navigation_level"
             app:popUpTo="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_gameboard"
+            app:destination="@id/navigation_gameboard"
+            app:popUpTo="@id/navigation_home" />
     </fragment>
 
     <fragment

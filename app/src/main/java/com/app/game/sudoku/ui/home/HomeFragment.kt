@@ -30,6 +30,12 @@ class HomeFragment : Fragment() {
 
         val bundleData = Bundle()
 
+        binding.resumeButton.setOnClickListener { v: View ->
+            v.findNavController().navigate(
+                R.id.action_navigation_home_to_navigation_gameboard
+            )
+        }
+
         binding.classicGameButton.setOnClickListener {v: View ->
             bundleData.putInt("modeSend", CLASSIC_GAME)
             v.findNavController().navigate(

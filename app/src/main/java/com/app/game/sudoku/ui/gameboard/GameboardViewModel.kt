@@ -1,13 +1,8 @@
 package com.app.game.sudoku.ui.gameboard
 
-import android.os.Bundle
-import android.os.CountDownTimer
-import android.provider.SyncStateContract.Helpers.insert
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.app.game.sudoku.back.Cell
 import com.app.game.sudoku.back.Game
 import com.app.game.sudoku.database.GameStatDatabase
 import com.app.game.sudoku.database.dao.GameStatDatabaseDao
@@ -52,7 +47,7 @@ class GameboardViewModel(
             val newGameStat = GameStat(
                 game_mode = game.mode,
                 game_level = game.level,
-                game_time = game.secondsUntil.value!!,
+                game_time = game._secondsUntil.value!!,
                 game_win = game.isWinGame.value!!
             )
             Log.i("DAO", "${newGameStat.game_mode}")

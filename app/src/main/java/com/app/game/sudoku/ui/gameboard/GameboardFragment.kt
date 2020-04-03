@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Chronometer
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
@@ -16,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
 import com.app.game.sudoku.R
+import com.app.game.sudoku.back.Board
 import com.app.game.sudoku.back.Cell
 import com.app.game.sudoku.database.GameStatDatabase
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
@@ -50,18 +50,28 @@ class GameboardFragment : Fragment(), OnTouchListener {
         gameboardViewModel = ViewModelProvider(this, gameboardViewModelFactory)
             .get(GameboardViewModel::class.java)
 
-        val level = arguments!!.getInt("level")
-        val mode = arguments!!.getInt("mode")
-        initlevelandmode(level, mode)
 
-        gameboardViewModel.function(levelGame, modeGame)
-        gameboardViewModel.game.secondsUntil.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
+
+        if (savedInstanceState != null)
+            restoreGame(savedInstanceState)
+        else {
+            val level = arguments!!.getInt("level")
+            val mode = arguments!!.getInt("mode")
+            initlevelandmode(level, mode)
+            gameboardViewModel.function(levelGame, modeGame)
+        }
+
+
+        gameboardViewModel.game._secondsUntil.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
             binding.timerChron.text = DateUtils.formatElapsedTime(secondsUntilEnd)
         })
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
         gameboardViewModel.game.timerOn(chronometer)
+
+
         binding.game = gameboardViewModel.game
+
         gameboardViewModel.game.mistakesCountLiveData.observe(viewLifecycleOwner, Observer { missCount ->
             binding.mistakesTextView.text = missCount
         })
@@ -118,23 +128,11 @@ class GameboardFragment : Fragment(), OnTouchListener {
         gameBoardView.updateMistakesCells(mistakeCell)
     }
 
-//    private fun updateHighlightedKeys(set: Set<Int>?) = set?.let {
-//        numberButtons.forEachIndexed { index, button ->
-//            val color = if (set.contains(index + 1)) ContextCompat.getColor(button.context, R.color.colorPrimary) else Color.LTGRAY
-//            button.background.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
-//        }
-//    }
-//
-//    private fun updateNoteTakingUI(isNoteTaking: Boolean?) = isNoteTaking?.let {
-//        val color = if (it) ContextCompat.getColor(notesButton.context, R.color.colorPrimary) else Color.LTGRAY
-//        notesButton.background.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
-//
-//    }
-
     private fun updateCells(cells: List<Cell>?) = cells?.let {
         gameBoardView.updateCells(cells)
 
     }
+
 
     private fun updateSelectedCellUI(cell: Pair<Int, Int>?) = cell?.let {
         gameBoardView.updateSelectedCellUI(cell.first, cell.second)
@@ -153,11 +151,11 @@ class GameboardFragment : Fragment(), OnTouchListener {
         modeGame = mode
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("GameBoardFragment", "onCreate")
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -172,11 +170,55 @@ class GameboardFragment : Fragment(), OnTouchListener {
     override fun onPause() {
         super.onPause()
         Log.i("GameBoardFragment", "onPause")
-        gameboardViewModel.game.pauseGame()
+        gameboardViewModel.game.stopTimer()
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putString("level_key", gameboardViewModel.game.level)
+        outState.putInt("mode_key", gameboardViewModel.game.mode)
+        outState.putInt("miss_key", gameboardViewModel.game.countMiss)
+        outState.putLong("time_kay", gameboardViewModel.game._secondsUntil.value!!)
+        val rowArray = IntArray(81)
+        val colArray = IntArray(81)
+        val valueArray = IntArray(81)
+        val startCellArray = BooleanArray(81)
+        for ((i, cell) in gameboardViewModel.game.board.cells.withIndex()) {
+            rowArray[i] = cell.row
+            colArray[i] = cell.col
+            valueArray[i] = cell.value
+            startCellArray[i] = cell.isStartingCell
+        }
+        outState.putIntArray("row_array_kay", rowArray)
+        outState.putIntArray("col_array_kay", colArray)
+        outState.putIntArray("value_array_kay", valueArray)
+        outState.putBooleanArray("start_cell_array_kay", startCellArray)
+        Log.i("GameBoardFragment", "save instance")
+
+
+    }
+
+    private fun restoreGame(savedInstanceState: Bundle) {
+        gameboardViewModel.function(
+            savedInstanceState.getString("level_key")!!,
+            savedInstanceState.getInt("mode_key")
+        )
+        gameboardViewModel.game.countMiss = savedInstanceState.getInt("miss_key")
+
+        val time = savedInstanceState.getLong("time_key")
+        gameboardViewModel.game._secondsUntil.value = time
+        val cells = List(81) { i ->
+            Cell(
+                savedInstanceState.getIntArray("row_array_key")!![i],
+                savedInstanceState.getIntArray("col_array_key")!![i],
+                savedInstanceState.getIntArray("value_array_kay")!![i],
+                savedInstanceState.getBooleanArray("start_cell_array_kay")!![i]
+            )
+        }
+        gameboardViewModel.game.board = Board(9, cells)
+        Log.i("GameBoardFragment", "restore instance")
+
 
     }
 
