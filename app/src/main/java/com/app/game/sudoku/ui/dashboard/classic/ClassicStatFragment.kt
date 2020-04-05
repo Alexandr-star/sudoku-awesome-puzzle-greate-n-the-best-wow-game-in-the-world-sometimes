@@ -38,14 +38,12 @@ class ClassicStatFragment : Fragment() {
         classicStatViewModel.gamesStatisticEasy.observe(viewLifecycleOwner, Observer { listStat ->
             binding.textViewGamesEasyData.text = listStat.component1()
             binding.textViewGamesWonEasyData.text = listStat.component2()
-            //val time = listStat.component3().toLong()
             binding.textViewGamesTimeEasyData.text = listStat.component3()
         })
 
         classicStatViewModel.gamesStatisticMedium.observe(viewLifecycleOwner, Observer { listStat ->
             binding.textViewGamesMediumData.text = listStat.component1()
             binding.textViewGamesWonMediumData.text = listStat.component2()
-            //val time = listStat.component3().toLong()
             binding.textViewGamesTimeMediumData.text = listStat.component3()
         })
 

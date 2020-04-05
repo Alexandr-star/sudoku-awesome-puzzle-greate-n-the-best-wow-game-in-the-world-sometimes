@@ -28,7 +28,6 @@
                 android:text="@string/level_easy" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/easyCard"
                 android:layout_width="@dimen/card_horizontal"
                 android:layout_height="@dimen/card_vertical">
 
@@ -55,8 +54,7 @@
                         <TextView
                             android:id="@+id/textView_GamesEasy_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
 
                     <TableRow
@@ -68,13 +66,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="100dp"
-                            android:text="TextView" />
+                            android:text="@string/games_won" />
 
                         <TextView
                             android:id="@+id/textView_GamesWonEasy_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
 
                     <TableRow
@@ -86,13 +83,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="100dp"
-                            android:text="TextView" />
+                            android:text="@string/Best_time" />
 
                         <TextView
                             android:id="@+id/textView_GamesTimeEasy_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
                 </TableLayout>
             </androidx.cardview.widget.CardView>
@@ -103,7 +99,6 @@
                 android:text="@string/level_medium" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/MediumCard"
                 android:layout_width="@dimen/card_horizontal"
                 android:layout_height="@dimen/card_vertical">
 
@@ -130,8 +125,7 @@
                         <TextView
                             android:id="@+id/textView_GamesMedium_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
 
                     <TableRow
@@ -143,13 +137,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="100dp"
-                            android:text="TextView" />
+                            android:text="@string/games_won" />
 
                         <TextView
                             android:id="@+id/textView_GamesWonMedium_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
 
                     <TableRow
@@ -161,13 +154,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="100dp"
-                            android:text="TextView" />
+                            android:text="@string/Best_time" />
 
                         <TextView
                             android:id="@+id/textView_GamesTimeMedium_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
                 </TableLayout>
             </androidx.cardview.widget.CardView>
@@ -178,7 +170,6 @@
                 android:text="@string/level_hard" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/HardCard"
                 android:layout_width="@dimen/card_horizontal"
                 android:layout_height="@dimen/card_vertical">
 
@@ -205,8 +196,7 @@
                         <TextView
                             android:id="@+id/textView_GamesHard_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
 
                     <TableRow
@@ -218,13 +208,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="100dp"
-                            android:text="TextView" />
+                            android:text="@string/games_won" />
 
                         <TextView
                             android:id="@+id/textView_GamesWonHard_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
 
                     <TableRow
@@ -236,13 +225,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="100dp"
-                            android:text="TextView" />
+                            android:text="@string/Best_time" />
 
                         <TextView
                             android:id="@+id/textView_GamesTimeHard_data"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="TextView" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
                 </TableLayout>
             </androidx.cardview.widget.CardView>
