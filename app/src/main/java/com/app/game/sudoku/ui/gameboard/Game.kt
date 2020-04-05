@@ -1,4 +1,4 @@
-package com.app.game.sudoku.back
+package com.app.game.sudoku.ui.gameboard
 
 import android.os.Build
 import android.os.CountDownTimer
@@ -7,7 +7,9 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.app.game.sudoku.ui.gameboard.GameboardFragment
+import com.app.game.sudoku.back.Board
+import com.app.game.sudoku.back.Cell
+import com.app.game.sudoku.back.Sudoku
 import android.widget.Chronometer as Chronometer
 
 
@@ -18,14 +20,10 @@ class Game(var level: String, var mode: Int) {
 
     lateinit var gameboardFragment: GameboardFragment
 
-    companion object {
-        // This is the number of milliseconds in a second
-        const val ONE_SECOND = 1000L
-        // This is the total time of the game
-        const val GAME_TIME_EASY = 600 * ONE_SECOND
-        const val GAME_TIME_MEDIUM = 1200 * ONE_SECOND
-        const val GAME_TIME_HARD = 1800 * ONE_SECOND
-    }
+    // This is the number of milliseconds in a second
+    val ONE_SECOND = 1000L
+    // This is the total time of the game
+    var GAME_TIMEDOWN: Long = 0L
 
     private lateinit var timerDown: CountDownTimer
     private lateinit var timer: Chronometer
@@ -42,7 +40,8 @@ class Game(var level: String, var mode: Int) {
     val eventGameFinish: LiveData<Boolean>
         get() = _eventGameFinish
 
-    var isWinGame = MutableLiveData<Boolean>(true)
+    var _isWinGame = false
+
 
     var selectedCellLiveData = MutableLiveData<Pair<Int, Int>>()
     var cellsLiveData = MutableLiveData<List<Cell>>()
@@ -61,6 +60,12 @@ class Game(var level: String, var mode: Int) {
     private var grid: Array<IntArray> = Array(SIZE) { IntArray(SIZE) }
 
     init {
+        when(level) {
+            "easy" -> GAME_TIMEDOWN = 600 * ONE_SECOND
+            "medium" -> GAME_TIMEDOWN = 1200 * ONE_SECOND
+            "hard" -> GAME_TIMEDOWN = 1800 * ONE_SECOND
+        }
+
         val sudoku = Sudoku()
         grid = sudoku.getSudoku()
         val cells = List(SIZE * SIZE) { i ->
@@ -84,7 +89,6 @@ class Game(var level: String, var mode: Int) {
         takingNotesLiveData.postValue(isTakingNots)
         mistakesCountLiveData.postValue(missToString(countMiss))
 
-
     }
 
     fun getBoardInArrayList() {
@@ -101,17 +105,13 @@ class Game(var level: String, var mode: Int) {
                 Log.i("Timer CLASSIC", "${_secondsUntil.value}")
             }
         } else if (mode == 2) {
-            when(level) {
-                "easy" -> countDown(GAME_TIME_EASY)
-                "medium" -> countDown(GAME_TIME_MEDIUM)
-                "hard" -> countDown(GAME_TIME_HARD)
-            }
+            countDown()
         }
     }
 
-    private fun countDown(levelTime: Long) {
+    private fun countDown() {
         this.timerDown = object : CountDownTimer(
-            levelTime,
+            GAME_TIMEDOWN,
             ONE_SECOND
         ) {
             override fun onTick(millisUntilFinished: Long) {
@@ -120,7 +120,7 @@ class Game(var level: String, var mode: Int) {
             }
             override fun onFinish() {
                 onGameFinishComplete()
-                isWinGame.value = false
+                _isWinGame = false
 
             }
         }
@@ -152,6 +152,7 @@ class Game(var level: String, var mode: Int) {
         if (countMiss == SIZE_MISS) {
             onGameFinishComplete()
             stopTimer()
+            _isWinGame = false
         }
     }
 
@@ -201,7 +202,7 @@ class Game(var level: String, var mode: Int) {
         } else {
             if (board.isBoardFull()) {
                 stopTimer()
-                isWinGame.value = true
+                _isWinGame = true
                 onGameFinishComplete()
             }
         }
@@ -262,6 +263,8 @@ class Game(var level: String, var mode: Int) {
 
     fun stopTimer() {
         if (mode == 1) timer.stop()
-        else timerDown.onFinish()
+        else {
+            timerDown.cancel()
+        }
     }
 }

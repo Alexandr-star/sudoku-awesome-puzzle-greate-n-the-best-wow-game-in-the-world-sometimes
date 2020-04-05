@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -70,6 +71,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     // optional - RxJava support for Room
     implementation "androidx.room:room-rxjava2:$room_version"
+    // Coroutines
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     // ViewModel

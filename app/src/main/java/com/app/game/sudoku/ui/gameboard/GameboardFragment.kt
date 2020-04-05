@@ -1,5 +1,7 @@
 package com.app.game.sudoku.ui.gameboard
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -17,18 +19,21 @@ import androidx.navigation.fragment.findNavController
 import com.app.game.sudoku.R
 import com.app.game.sudoku.back.Board
 import com.app.game.sudoku.back.Cell
-import com.app.game.sudoku.database.GameStatDatabase
 import com.app.game.sudoku.databinding.FragmentGameboardBinding
+import com.app.game.sudoku.statisticStore.StatisticPreference
 import com.app.game.sudoku.ui.gameboard.GameboardView.OnTouchListener
 import kotlinx.android.synthetic.main.fragment_gameboard.*
 
 class GameboardFragment : Fragment(), OnTouchListener {
     private lateinit var gameboardViewModel: GameboardViewModel
-
+    private var isComplite = false
     private lateinit var numberButtons: List<View>
 
     private lateinit var levelGame: String
     private var modeGame: Int = -1
+
+    private val CLASSIC_MODE = 1
+    private val TIME_MODE = 2
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -45,12 +50,8 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
         val chronometer = binding.root.findViewById<Chronometer>(R.id.timerChron)
 
-        val dao = GameStatDatabase.getInstance(inflater.context).getGameStatDatabaseDao()
-        val gameboardViewModelFactory = GameboardViewModelFactory(dao)
-        gameboardViewModel = ViewModelProvider(this, gameboardViewModelFactory)
+        gameboardViewModel = ViewModelProvider(this)
             .get(GameboardViewModel::class.java)
-
-
 
         if (savedInstanceState != null)
             restoreGame(savedInstanceState)
@@ -60,7 +61,6 @@ class GameboardFragment : Fragment(), OnTouchListener {
             initlevelandmode(level, mode)
             gameboardViewModel.function(levelGame, modeGame)
         }
-
 
         gameboardViewModel.game._secondsUntil.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
             binding.timerChron.text = DateUtils.formatElapsedTime(secondsUntilEnd)
@@ -100,27 +100,100 @@ class GameboardFragment : Fragment(), OnTouchListener {
                 gameboardViewModel.game.mistakesLiveData.observe(viewLifecycleOwner, Observer { updateCellsWithMistakes(it) })
             }
         }
-//        binding.notesButton.setOnClickListener{gameboardViewModel.game.changeNoteTakingState()}
         binding.deleteButton.setOnClickListener {gameboardViewModel.game.deleteNumInCell()}
 
         setHasOptionsMenu(true)
+
+
         return binding.root
     }
 
     private fun gameFinished() {
         //gameboardViewModel.game.stopTimer()
-        gameboardViewModel.onStartTracking()
-        val bundleData = Bundle()
-        var endGameStatus = if (gameboardViewModel.game.isWinGame.value!!) "win" else "lose"
-        bundleData.putString("gameStatus", endGameStatus)
-        Log.i("Game Finish", "${endGameStatus}")
-        this.findNavController().navigate(
-            R.id.action_navigation_gameboard_to_navigation_end,
-            bundleData
-        )
+        saveStaticticInPreference()
+        if (gameboardViewModel.game._isWinGame) {
+            redirectToEndFragment("won")
+        } else {
+            redirectToEndFragment("lose")
+        }
+
+
     }
 
-    private fun gamePause() {
+    private fun saveStaticticInPreference() {
+        if (gameboardViewModel.game.mode == CLASSIC_MODE) {
+            when(gameboardViewModel.game.level) {
+                "easy" -> StatisticPreference.classicModeEasy =
+                    addStatisticInPreference(StatisticPreference.classicModeEasy, CLASSIC_MODE)
+                "medium" -> StatisticPreference.classicModeMedium =
+                    addStatisticInPreference(StatisticPreference.classicModeMedium, CLASSIC_MODE)
+                "hard" -> StatisticPreference.classicModeHard =
+                    addStatisticInPreference(StatisticPreference.classicModeHard, CLASSIC_MODE)
+            }
+        } else if (gameboardViewModel.game.mode == TIME_MODE) {
+            when(gameboardViewModel.game.level) {
+                "easy" -> StatisticPreference.timeModeEasy =
+                    addStatisticInPreference(StatisticPreference.timeModeEasy, TIME_MODE)
+                "medium" -> StatisticPreference.timeModeMedium =
+                    addStatisticInPreference(StatisticPreference.timeModeMedium, TIME_MODE)
+                "hard" -> StatisticPreference.timeModeHard =
+                    addStatisticInPreference(StatisticPreference.timeModeHard, TIME_MODE)
+            }
+        }
+    }
+
+    private fun addStatisticInPreference(statistic: String, mode: Int): String {
+        var stat = statistic
+        Log.i("StartString", "${stat}")
+        var games = stat.substringBefore("/").toInt()
+        var winsStr = stat.substringAfter("/")
+        var wins = winsStr.substringBeforeLast("/").toInt()
+        var time = stat.substringAfterLast("/").toLong()
+        Log.i("games", "${games}")
+        Log.i("wins", "${wins}")
+        Log.i("time", "${time}")
+
+        games++
+        Log.i("games", "${games}")
+
+        if (gameboardViewModel.game._isWinGame) {
+            var curTime = 0L
+            wins++
+            when(mode) {
+                TIME_MODE -> {
+                    curTime = gameboardViewModel.game.GAME_TIMEDOWN - gameboardViewModel.game._secondsUntil.value!!
+                    Log.i("time timeMode", "${curTime}")
+                }
+                else -> {
+                    curTime = gameboardViewModel.game._secondsUntil.value!!
+                    Log.i("time", "${curTime}")
+                }
+            }
+
+            if (curTime <= time || time == 0L) {
+                return "${games}/${wins}/${curTime}"
+            } else {
+                return "${games}/${wins}/${time}"
+            }
+        } else {
+            return "${games}/${wins}/${time}"
+        }
+    }
+
+
+
+
+    private fun redirectToEndFragment(endGameStatus: String) {
+        if (!isComplite) {
+            val bundleData = Bundle()
+            bundleData.putString("gameStatus", endGameStatus)
+            Log.i("Game Finish", "${endGameStatus}")
+            this.findNavController().navigate(
+                R.id.action_navigation_gameboard_to_navigation_end,
+                bundleData
+            )
+            isComplite = true
+        }
 
     }
 
@@ -219,7 +292,5 @@ class GameboardFragment : Fragment(), OnTouchListener {
         gameboardViewModel.game.board = Board(9, cells)
         Log.i("GameBoardFragment", "restore instance")
 
-
     }
-
 }

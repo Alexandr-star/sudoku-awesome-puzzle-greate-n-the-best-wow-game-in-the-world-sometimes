@@ -6,39 +6,22 @@
     app:startDestination="@+id/navigation_home">
 
     <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.app.game.sudoku.ui.dashboard.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+    <fragment
         android:id="@+id/navigation_home"
         android:name="com.app.game.sudoku.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_navigation_home_to_navigation_level"
-            app:destination="@id/navigation_level" />
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_level_time"
             app:destination="@id/navigation_level"
             app:popUpTo="@id/navigation_home" />
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_gameboard"
-            app:destination="@id/navigation_gameboard"
-            app:popUpTo="@id/navigation_home" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.app.game.sudoku.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
 
-    <fragment
-        android:id="@+id/navigation_gameboard"
-        android:name="com.app.game.sudoku.ui.gameboard.GameboardFragment"
-        android:label="@string/title_gameboard"
-        tools:layout="@layout/fragment_gameboard" >
-        <action
-            android:id="@+id/action_navigation_gameboard_to_navigation_end"
-            app:destination="@id/navigation_end"
-            app:popUpTo="@id/navigation_home" />
-    </fragment>
 
     <fragment
         android:id="@+id/navigation_level"
@@ -48,6 +31,17 @@
         <action
             android:id="@+id/action_navigation_level_to_navigation_gameboard"
             app:destination="@id/navigation_gameboard"
+            app:popUpTo="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_gameboard"
+        android:name="com.app.game.sudoku.ui.gameboard.GameboardFragment"
+        android:label="@string/title_gameboard"
+        tools:layout="@layout/fragment_gameboard" >
+        <action
+            android:id="@+id/action_navigation_gameboard_to_navigation_end"
+            app:destination="@id/navigation_end"
             app:popUpTo="@id/navigation_home" />
     </fragment>
 

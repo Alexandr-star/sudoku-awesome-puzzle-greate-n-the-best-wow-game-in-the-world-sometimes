@@ -8,7 +8,7 @@
     <data>
         <variable
             name="game"
-            type="com.app.game.sudoku.back.Game"/>
+            type="com.app.game.sudoku.ui.gameboard.Game"/>
 
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout

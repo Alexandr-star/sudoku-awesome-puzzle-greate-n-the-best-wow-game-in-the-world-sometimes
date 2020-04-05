@@ -26,8 +26,6 @@ class TimeStatFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(TimeStatViewModel::class.java)
 
-        binding.text.text = "slkdf"
-
         return binding.root
     }
 

@@ -11,9 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.app.game.sudoku.R
 import com.app.game.sudoku.databinding.FragmentHomeBinding
-import com.app.game.sudoku.ui.gameboard.GameboardFragment
-import com.app.game.sudoku.ui.gameboard.GameboardViewModel
-import com.app.game.sudoku.ui.level.LevelGameFragment
+
 
 class HomeFragment : Fragment() {
     private val CLASSIC_GAME = 1
@@ -30,12 +28,6 @@ class HomeFragment : Fragment() {
 
         val bundleData = Bundle()
 
-        binding.resumeButton.setOnClickListener { v: View ->
-            v.findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_gameboard
-            )
-        }
-
         binding.classicGameButton.setOnClickListener {v: View ->
             bundleData.putInt("modeSend", CLASSIC_GAME)
             v.findNavController().navigate(
@@ -46,7 +38,7 @@ class HomeFragment : Fragment() {
         binding.timeGameButton.setOnClickListener {v: View ->
             bundleData.putInt("modeSend", TIME_GAME)
             v.findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_level_time,
+                R.id.action_navigation_home_to_navigation_level,
                 bundleData
             )
         }

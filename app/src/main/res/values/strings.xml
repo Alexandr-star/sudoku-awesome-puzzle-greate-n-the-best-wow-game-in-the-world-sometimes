@@ -36,5 +36,12 @@
     <string name="eight">8</string>
     <string name="nine">9</string>
 
+    <!--  text in card  -->
+    <string name="games_played">Games played:</string>
+    <string name="games_won">Games won:</string>
+    <string name="Best_time">Best time:</string>
+
+    <!--  preferene file  -->
+    <string name="pref_file_stat_game">com.app.game.sudoku.STATISTIC_THIS_GAME</string>
 
 </resources>

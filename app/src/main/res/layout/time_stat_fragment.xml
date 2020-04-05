@@ -4,23 +4,255 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.dashboard.dontclassic.TimeStatFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="301dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="295dp"
-            android:layout_marginEnd="55dp"
-            android:layout_marginBottom="275dp"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/levelEasyTextView"
+                    android:layout_width="@dimen/card_horizontal"
+                    android:layout_height="@dimen/text_vetrical"
+                    android:text="@string/level_easy" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/easyCard"
+                    android:layout_width="@dimen/card_horizontal"
+                    android:layout_height="@dimen/card_vertical" >
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:gravity="center">
+
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_Games_easy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingRight="100dp"
+                                android:text="@string/games_played" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesEasy_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_GamesWon_easy"
+                                android:paddingRight="100dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesWonEasy_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_GamesTime_easy"
+                                android:paddingRight="100dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesTimeEasy_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+                    </TableLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/LevelMediumTextView"
+                    android:layout_width="@dimen/card_horizontal"
+                    android:layout_height="@dimen/text_vetrical"
+                    android:text="@string/level_medium" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/MediumCard"
+                    android:layout_width="@dimen/card_horizontal"
+                    android:layout_height="@dimen/card_vertical" >
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:gravity="center">
+
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_Games_medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingRight="100dp"
+                                android:text="@string/games_played" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesEasyMesium_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_GamesWon_medium"
+                                android:paddingRight="100dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesWonMedium_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_GamesTime_medium"
+                                android:paddingRight="100dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesTimeMedium_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+                    </TableLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/LevelHardTextView"
+                    android:layout_width="@dimen/card_horizontal"
+                    android:layout_height="@dimen/text_vetrical"
+                    android:text="@string/level_hard" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/HardCard"
+                    android:layout_width="@dimen/card_horizontal"
+                    android:layout_height="@dimen/card_vertical" >
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:gravity="center">
+
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_Games_hard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingRight="100dp"
+                                android:text="@string/games_played" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesHard_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_GamesWon_hard"
+                                android:paddingRight="100dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesWonHard_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+                        <TableRow
+                            android:padding="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textView_GamesTime_hard"
+                                android:paddingRight="100dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+
+                            <TextView
+                                android:id="@+id/textView_GamesTimeHard_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TextView" />
+                        </TableRow>
+                    </TableLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </ScrollView>
 </layout>

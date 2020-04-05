@@ -3,4 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="menu_button">20dp</dimen>
+    <dimen name="card_horizontal">350dp</dimen>
+    <dimen name="card_vertical">200dp</dimen>
+    <dimen name="text_vetrical">30dp</dimen>
 </resources>
