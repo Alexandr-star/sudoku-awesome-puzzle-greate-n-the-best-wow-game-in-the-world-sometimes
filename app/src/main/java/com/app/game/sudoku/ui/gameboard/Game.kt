@@ -130,13 +130,20 @@ class Game(var level: String, var mode: Int) {
         cell.value = number
         cellsLiveData.postValue(board.cells)
         checkMistakes(cell)
-        if (cell.row == mistakes?.row && cell.col == mistakes?.col)
+        if (cell.row == mistakes?.row && cell.col == mistakes?.col) {
             cell.isMistake = true
+            mistakes = null
+        }
+        else {
+            cell.isMistake = false
+        }
 
         if (countMiss == SIZE_MISS) {
-            onGameFinishComplete()
+            Log.i("COUNT MISS", "${countMiss}")
+            mistakesCountLiveData.postValue(missToString(countMiss))
             stopTimer()
             _isWinGame = false
+            onGameFinishComplete()
         }
     }
 
@@ -149,14 +156,6 @@ class Game(var level: String, var mode: Int) {
         }
     }
 
-    fun changeNoteTakingState() {
-        isTakingNots = !isTakingNots
-        takingNotesLiveData.postValue(isTakingNots)
-
-        val currentNotes = setOf<Int>()
-        highlightedKeysLiveData.postValue(currentNotes)
-    }
-
     fun deleteNumInCell() {
         val cell = board.getCell(selectedRow, selectedCol)
         cell.value = 0
@@ -167,9 +166,10 @@ class Game(var level: String, var mode: Int) {
 
     private fun checkMistakes(cell: Cell) {
         if (isInBoxMiss(cell) || isInColMiss(cell) || isInRowMiss(cell)) {
-            mistakesCountLiveData.postValue(missToString(++countMiss))
+            countMiss++
+            mistakesCountLiveData.postValue(missToString(countMiss))
             Log.i("Game", "MISTAKE IS  (${mistakes?.row}; ${mistakes?.col})")
-            Log.i("Game", "MISTAKE IS ${mistakesCountLiveData}")
+            Log.i("Game", "MISTAKE IS ${mistakesCountLiveData.value}")
         } else {
             if (board.isBoardFull()) {
                 stopTimer()
@@ -225,6 +225,10 @@ class Game(var level: String, var mode: Int) {
     }
 
     private fun missToString(countMiss: Int): String {
+        return "${countMiss}/${SIZE_MISS}"
+    }
+
+    fun getMissString(): String {
         return "${countMiss}/${SIZE_MISS}"
     }
 

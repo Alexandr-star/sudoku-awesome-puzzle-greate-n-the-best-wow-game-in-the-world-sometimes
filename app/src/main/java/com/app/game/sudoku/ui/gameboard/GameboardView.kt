@@ -107,12 +107,12 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
                     val col = cell.col
                     val stringValue = cell.value.toString()
                     val paintToUse = if (cell.isStartingCell) {
-                                            startingCellTextPaint
-                                        } else if (cell.isMistake){
-                                            mistekesTextPaint
-                                        } else {
-                                            textPaint
-                                        }
+                        startingCellTextPaint
+                    } else if (cell.isMistake){
+                        mistekesTextPaint
+                    } else {
+                        textPaint
+                    }
                     val textBounds = Rect()
                     paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
                     val textWidth = paintToUse.measureText(stringValue)
@@ -213,7 +213,7 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
                 if (cell.col == missCell.col && cell.row == missCell.row)
                     cell.isMistake = true
             }
-            invalidate()
+            //invalidate()
         }
 
 }

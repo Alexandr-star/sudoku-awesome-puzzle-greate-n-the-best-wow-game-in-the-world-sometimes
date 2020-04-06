@@ -117,25 +117,25 @@ class GameboardFragment : Fragment(), OnTouchListener {
         if (gameboardViewModel.game.mode == CLASSIC_MODE) {
             when(gameboardViewModel.game.level) {
                 "easy" -> StatisticPreference.classicModeEasy =
-                    addStatisticInPreference(StatisticPreference.classicModeEasy, CLASSIC_MODE)
+                    addStatisticInPreference(StatisticPreference.classicModeEasy)
                 "medium" -> StatisticPreference.classicModeMedium =
-                    addStatisticInPreference(StatisticPreference.classicModeMedium, CLASSIC_MODE)
+                    addStatisticInPreference(StatisticPreference.classicModeMedium)
                 "hard" -> StatisticPreference.classicModeHard =
-                    addStatisticInPreference(StatisticPreference.classicModeHard, CLASSIC_MODE)
+                    addStatisticInPreference(StatisticPreference.classicModeHard)
             }
         } else if (gameboardViewModel.game.mode == TIME_MODE) {
             when(gameboardViewModel.game.level) {
                 "easy" -> StatisticPreference.timeModeEasy =
-                    addStatisticInPreference(StatisticPreference.timeModeEasy, TIME_MODE)
+                    addStatisticInPreference(StatisticPreference.timeModeEasy)
                 "medium" -> StatisticPreference.timeModeMedium =
-                    addStatisticInPreference(StatisticPreference.timeModeMedium, TIME_MODE)
+                    addStatisticInPreference(StatisticPreference.timeModeMedium)
                 "hard" -> StatisticPreference.timeModeHard =
-                    addStatisticInPreference(StatisticPreference.timeModeHard, TIME_MODE)
+                    addStatisticInPreference(StatisticPreference.timeModeHard)
             }
         }
     }
 
-    private fun addStatisticInPreference(statistic: String, mode: Int): String {
+    private fun addStatisticInPreference(statistic: String): String {
         var stat = statistic
         Log.i("StartString", "${stat}")
         var games = stat.substringBefore("/").toInt()
@@ -152,17 +152,8 @@ class GameboardFragment : Fragment(), OnTouchListener {
         if (gameboardViewModel.game._isWinGame) {
             var curTime = 0L
             wins++
-            when(mode) {
-                TIME_MODE -> {
-                    curTime = gameboardViewModel.game.GAME_TIMEDOWN - gameboardViewModel.game.secondsUntil.value!!
-                    Log.i("time timeMode", "${curTime}")
-                }
-                else -> {
-                    curTime = gameboardViewModel.game.secondsUntil.value!!
-                    Log.i("time", "${curTime}")
-                }
-            }
-
+            curTime = gameboardViewModel.game.secondsUntil.value!!
+            Log.i("time", "${curTime}")
             if (curTime <= time || time == 0L) {
                 return "${games}/${wins}/${curTime}"
             } else {
@@ -177,7 +168,8 @@ class GameboardFragment : Fragment(), OnTouchListener {
         if (!isComplite) {
             val bundleData = Bundle()
             bundleData.putString("gameStatus", endGameStatus)
-            bundleData.putString("mistakes", gameboardViewModel.game.mistakesCountLiveData.value)
+            bundleData.putString("mistakes", gameboardViewModel.game.getMissString())
+            Log.i("COUNT MISSLIVE", "${gameboardViewModel.game.mistakesCountLiveData.value}")
             bundleData.putLong("time", gameboardViewModel.game.secondsUntil.value!!)
             Log.i("Game Finish", "${endGameStatus}")
             this.findNavController().navigate(
@@ -234,7 +226,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
     override fun onPause() {
         super.onPause()
         Log.i("GameBoardFragment", "onPause")
-        gameboardViewModel.game.stopTimer()
+        //gameboardViewModel.game.stopTimer()
 
     }
 
