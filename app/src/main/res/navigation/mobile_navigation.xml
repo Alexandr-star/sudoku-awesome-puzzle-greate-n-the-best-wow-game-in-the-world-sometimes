@@ -46,12 +46,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_pause"
-        android:name="com.app.game.sudoku.ui.gamevent.GamePauseFragment"
-        android:label="@string/title_pause"
-        tools:layout="@layout/fragment_pausegame"/>
-
-    <fragment
         android:id="@+id/navigation_end"
         android:name="com.app.game.sudoku.ui.gamevent.EndGameFragment"
         android:label="@string/title_gameEnd"

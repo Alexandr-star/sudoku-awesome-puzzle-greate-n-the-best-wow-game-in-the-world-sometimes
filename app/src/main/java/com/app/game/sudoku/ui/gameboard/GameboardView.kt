@@ -30,13 +30,13 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
 
     private val thickLinePaint = Paint().apply {
         style = Paint.Style.STROKE
-        color = Color.parseColor("#3ee6b9")
+        color = Color.parseColor("#00dbc6")
         strokeWidth = 7F
     }
 
     private val thinLinePaint = Paint().apply {
         style = Paint.Style.STROKE
-        color = Color.parseColor("#3ee6b9")
+        color = Color.parseColor("#00dbc6")
         strokeWidth = 4F
     }
 
