@@ -23,6 +23,8 @@
     <!--  textView  -->
     <string name="classic_game">Classic Game</string>
     <string name="time_game">Time Game</string>
+    <string name="end_game_time">Time:</string>
+    <string name="end_game_miss">Mistakes:</string>
 
     <!--   game buttons-->
     <string name="one">1</string>

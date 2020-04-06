@@ -31,7 +31,7 @@
         <action
             android:id="@+id/action_navigation_level_to_navigation_gameboard"
             app:destination="@id/navigation_gameboard"
-            app:popUpTo="@id/navigation_home" />
+            app:popUpTo="@id/navigation_menu" />
     </fragment>
 
     <fragment
@@ -42,7 +42,7 @@
         <action
             android:id="@+id/action_navigation_gameboard_to_navigation_end"
             app:destination="@id/navigation_end"
-            app:popUpTo="@id/navigation_home" />
+            app:popUpTo="@id/navigation_menu" />
     </fragment>
 
     <fragment

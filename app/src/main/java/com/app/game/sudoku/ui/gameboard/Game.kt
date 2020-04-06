@@ -52,12 +52,12 @@ class Game(var level: String, var mode: Int) {
 
     init {
         when(level) {
-            "easy" -> GAME_TIMEDOWN = 600 * ONE_SECOND
-            "medium" -> GAME_TIMEDOWN = 1200 * ONE_SECOND
-            "hard" -> GAME_TIMEDOWN = 1800 * ONE_SECOND
+            "easy" -> GAME_TIMEDOWN = 420 * ONE_SECOND
+            "medium" -> GAME_TIMEDOWN = 600 * ONE_SECOND
+            "hard" -> GAME_TIMEDOWN = 720 * ONE_SECOND
         }
 
-        val sudoku = Sudoku()
+        val sudoku = Sudoku(level)
         grid = sudoku.getSudoku()
         val cells = List(SIZE * SIZE) { i ->
             Cell(

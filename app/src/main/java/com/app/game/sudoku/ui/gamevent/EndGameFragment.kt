@@ -31,6 +31,8 @@ class EndGameFragment  : Fragment() {
         )
 
         binding.endGameView.text = endGameViewModel.statusGame.value
+        binding.missTextView.text = endGameViewModel.mistakesGame.value
+        binding.timeTextView.text = endGameViewModel.timeGame.value
 
         binding.closeGameButton.setOnClickListener { v: View ->
             v.findNavController().navigate(

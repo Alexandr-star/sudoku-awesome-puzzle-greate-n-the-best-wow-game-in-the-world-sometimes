@@ -23,21 +23,24 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/level_easy" />
+                android:text="@string/level_easy"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/mediumButton"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/level_medium" />
+                android:text="@string/level_medium"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/hardButton"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/level_hard" />
+                android:text="@string/level_hard"
+                android:textSize="@dimen/text_size" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

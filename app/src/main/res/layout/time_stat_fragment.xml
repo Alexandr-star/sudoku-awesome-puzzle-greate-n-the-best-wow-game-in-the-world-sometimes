@@ -19,75 +19,84 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:paddingBottom="50dp">
+                android:paddingBottom="50dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="@dimen/card_horizontal"
                     android:layout_height="@dimen/text_vetrical"
-                    android:text="@string/level_easy" />
+                    android:text="@string/level_easy"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="@dimen/card_horizontal"
-                    android:layout_height="@dimen/card_vertical" >
+                    android:layout_height="@dimen/card_vertical">
 
                     <TableLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:gravity="center">
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp">
 
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingRight="100dp"
-                                android:text="@string/games_played" />
+                                android:text="@string/games_played"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesEasy_data"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_size" />
                         </TableRow>
 
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
-                                android:paddingRight="100dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/games_won" />
+                                android:paddingRight="100dp"
+                                android:text="@string/games_won"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesWonEasy_data"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_size" />
                         </TableRow>
+
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
-                                android:paddingRight="100dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/Best_time" />
+                                android:paddingRight="100dp"
+                                android:text="@string/Best_time"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesTimeEasy_data"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_size" />
                         </TableRow>
                     </TableLayout>
                 </androidx.cardview.widget.CardView>
@@ -95,30 +104,34 @@
                 <TextView
                     android:layout_width="@dimen/card_horizontal"
                     android:layout_height="@dimen/text_vetrical"
-                    android:text="@string/level_medium" />
+                    android:text="@string/level_medium"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="@dimen/card_horizontal"
-                    android:layout_height="@dimen/card_vertical" >
+                    android:layout_height="@dimen/card_vertical">
+
                     <TableLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:gravity="center">
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp">
 
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingRight="100dp"
-                                android:text="@string/games_played" />
+                                android:text="@string/games_played"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesMedium_data"
@@ -127,36 +140,41 @@
                         </TableRow>
 
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
-                                android:paddingRight="100dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/games_won" />
+                                android:paddingRight="100dp"
+                                android:text="@string/games_won"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesWonMedium_data"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_size" />
                         </TableRow>
+
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
-                                android:paddingRight="100dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/Best_time" />
+                                android:paddingRight="100dp"
+                                android:text="@string/Best_time"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesTimeMedium_data"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_size" />
                         </TableRow>
                     </TableLayout>
                 </androidx.cardview.widget.CardView>
@@ -164,68 +182,78 @@
                 <TextView
                     android:layout_width="@dimen/card_horizontal"
                     android:layout_height="@dimen/text_vetrical"
-                    android:text="@string/level_hard" />
+                    android:text="@string/level_hard"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="@dimen/card_horizontal"
-                    android:layout_height="@dimen/card_vertical" >
+                    android:layout_height="@dimen/card_vertical">
+
                     <TableLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:gravity="center">
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp">
 
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingRight="100dp"
-                                android:text="@string/games_played" />
+                                android:text="@string/games_played"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesHard_data"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_size" />
                         </TableRow>
 
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
-                                android:paddingRight="100dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/games_won" />
+                                android:paddingRight="100dp"
+                                android:text="@string/games_won"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesWonHard_data"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_size" />
                         </TableRow>
+
                         <TableRow
-                            android:padding="20dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
 
                             <TextView
-                                android:paddingRight="100dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/Best_time" />
+                                android:paddingRight="100dp"
+                                android:text="@string/Best_time"
+                                android:textSize="@dimen/text_size" />
 
                             <TextView
                                 android:id="@+id/textView_GamesTimeHard_data"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_size" />
                         </TableRow>
                     </TableLayout>
                 </androidx.cardview.widget.CardView>

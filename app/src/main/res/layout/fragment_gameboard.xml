@@ -33,6 +33,7 @@
                 android:layout_weight="1"
 
                 android:text="@={game.level}"
+                android:textSize="@dimen/text_size"
                 android:visibility="visible" />
 
             <TextView
@@ -40,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:textSize="@dimen/text_size"
                 android:visibility="visible" />
 
             <Chronometer
@@ -47,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="15dp"
+                android:textSize="@dimen/text_size"
                 android:visibility="visible" />
         </LinearLayout>
 
@@ -101,7 +103,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/one" />
+                android:text="@string/one"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/twoButton"
@@ -109,7 +112,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/two" />
+                android:text="@string/two"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/threeButton"
@@ -117,7 +121,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/three" />
+                android:text="@string/three"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/fourButton"
@@ -125,7 +130,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/four" />
+                android:text="@string/four"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/fiveButton"
@@ -133,7 +139,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/five" />
+                android:text="@string/five"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/sixButton"
@@ -141,7 +148,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/six" />
+                android:text="@string/six"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/sevenButton"
@@ -149,7 +157,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/seven" />
+                android:text="@string/seven"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/eightButton"
@@ -157,7 +166,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/eight" />
+                android:text="@string/eight"
+                android:textSize="@dimen/text_size" />
 
             <Button
                 android:id="@+id/nineButton"
@@ -165,7 +175,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/nine" />
+                android:text="@string/nine"
+                android:textSize="@dimen/text_size" />
 
 
         </LinearLayout>

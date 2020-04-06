@@ -3,17 +3,42 @@ package com.app.game.sudoku.back
 import kotlin.math.pow
 import kotlin.random.Random
 
-class Sudoku {
+class Sudoku(level: String) {
     private val n = 3
     private val SIZE  = 9
     private val EMPTY  = 0
     private val itter = 20
-    private var LEVEL = 3
+
+    private var LEVEL_CELL = 0
 
     private var baseGrid: Array<IntArray> =  Array(9) { IntArray(9) }
 
+    init {
+        var LEVEL_CELL_MIN = 0
+        var LEVEL_CELL_MAX = 0
+        when(level) {
+            "easy" -> {
+                LEVEL_CELL_MIN = 36
+                LEVEL_CELL_MAX = 41
+            }
+            "medium" -> {
+                LEVEL_CELL_MIN = 41
+                LEVEL_CELL_MAX = 46
+            }
+            "hard" -> {
+                LEVEL_CELL_MIN = 46
+                LEVEL_CELL_MAX = 51
+            }
+        }
+        initLevel(LEVEL_CELL_MIN, LEVEL_CELL_MAX)
+    }
 
-     private fun initSudokuGrid() {
+    private fun initLevel(levelCellMin: Int, levelCellMax: Int) {
+        LEVEL_CELL = Random.nextInt(levelCellMin, levelCellMax)
+    }
+
+
+    private fun initSudokuGrid() {
         for (i in 0 until n * n) {
             for (j in 0 until n * n) {
                 baseGrid[i][j] = ((i * n + i / n + j) % (n * n) + 1)
@@ -28,9 +53,7 @@ class Sudoku {
         return baseGrid
     }
 
-    private fun level() {
 
-    }
 
     private fun mixSudokuGrid() {
         for (i in 0 until itter) {
@@ -52,7 +75,7 @@ class Sudoku {
         var iterate = 0
         var difficult = n.toDouble().pow(4).toInt()
 
-        while (iterate < LEVEL) {
+        while (iterate < LEVEL_CELL) {
             val i = Random.nextInt(0, n * n)
             val j = Random.nextInt(0, n * n)
 
