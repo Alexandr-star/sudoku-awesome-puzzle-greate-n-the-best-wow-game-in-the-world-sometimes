@@ -82,10 +82,6 @@ class Game(var level: String, var mode: Int) {
 
     }
 
-    fun getBoardInArrayList() {
-        val cells = board.cells
-    }
-
     @RequiresApi(Build.VERSION_CODES.N)
     fun timerOn(chron: Chronometer) {
         this.timer = chron
@@ -98,6 +94,39 @@ class Game(var level: String, var mode: Int) {
         } else if (mode == 2) {
             countDown()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun timerOn(chron: Chronometer, time: Long) {
+        this.timer = chron
+        if (mode == 1) {
+            timer.base = SystemClock.elapsedRealtime() - (time - 1 ) * ONE_SECOND
+            timer.start()
+            timer.setOnChronometerTickListener { timer ->
+                secondsUntil.value = (SystemClock.elapsedRealtime() - timer.base) / ONE_SECOND + 1
+                Log.i("Timer CLASSIC", "${secondsUntil.value}")
+            }
+        } else if (mode == 2) {
+            countDown(time)
+        }
+    }
+
+    private fun countDown(time: Long) {
+        this.timerDown = object : CountDownTimer(
+            time * ONE_SECOND,
+            ONE_SECOND
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                secondsUntil.value = millisUntilFinished / ONE_SECOND
+                Log.i("Game TIMER", "${secondsUntil.value}")
+            }
+            override fun onFinish() {
+                onGameFinishComplete()
+                _isWinGame = false
+
+            }
+        }
+        timerDown.start()
     }
 
     private fun countDown() {
@@ -180,8 +209,8 @@ class Game(var level: String, var mode: Int) {
     }
 
     private fun isInBoxMiss(cell: Cell): Boolean {
-        var r = selectedRow - selectedRow % 3;
-        var c = selectedCol - selectedCol % 3;
+        val r = selectedRow - selectedRow % 3
+        val c = selectedCol - selectedCol % 3
 
         for (i in r until r + 3) {
             for (j in c until c + 3) {

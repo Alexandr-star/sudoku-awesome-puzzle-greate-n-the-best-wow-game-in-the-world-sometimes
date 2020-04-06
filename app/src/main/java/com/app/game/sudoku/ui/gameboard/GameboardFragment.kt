@@ -32,6 +32,8 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
     private val CLASSIC_MODE = 1
     private val TIME_MODE = 2
+    private var time: Long? = null
+    lateinit var chronometer: Chronometer
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -45,15 +47,14 @@ class GameboardFragment : Fragment(), OnTouchListener {
             inflater, R.layout.fragment_gameboard, container, false)
 
         binding.root.findViewById<GameboardView>(R.id.gameBoardView).registerListener(this)
-
-        val chronometer = binding.root.findViewById<Chronometer>(R.id.timerChron)
+                chronometer = binding.root.findViewById<Chronometer>(R.id.timerChron)
 
         gameboardViewModel = ViewModelProvider(this)
             .get(GameboardViewModel::class.java)
 
-        /*if (savedInstanceState != null)
+        if (savedInstanceState != null)
             restoreGame(savedInstanceState)
-        else {*/
+        /**else {*/
             val level = arguments!!.getInt("level")
             val mode = arguments!!.getInt("mode")
             initlevelandmode(level, mode)
@@ -65,7 +66,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
         })
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
-        gameboardViewModel.game.timerOn(chronometer)
+//        gameboardViewModel.game.timerOn(chronometer)
 
         binding.game = gameboardViewModel.game
 
@@ -136,12 +137,12 @@ class GameboardFragment : Fragment(), OnTouchListener {
     }
 
     private fun addStatisticInPreference(statistic: String): String {
-        var stat = statistic
-        Log.i("StartString", "${stat}")
+        val stat = statistic
+        Log.i("StartString", stat)
         var games = stat.substringBefore("/").toInt()
-        var winsStr = stat.substringAfter("/")
+        val winsStr = stat.substringAfter("/")
         var wins = winsStr.substringBeforeLast("/").toInt()
-        var time = stat.substringAfterLast("/").toLong()
+        val time = stat.substringAfterLast("/").toLong()
         Log.i("games", "${games}")
         Log.i("wins", "${wins}")
         Log.i("time", "${time}")
@@ -150,7 +151,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
         Log.i("games", "${games}")
 
         if (gameboardViewModel.game._isWinGame) {
-            var curTime = 0L
+            var curTime: Long
             wins++
             curTime = gameboardViewModel.game.secondsUntil.value!!
             Log.i("time", "${curTime}")
@@ -171,7 +172,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
             bundleData.putString("mistakes", gameboardViewModel.game.getMissString())
             Log.i("COUNT MISSLIVE", "${gameboardViewModel.game.mistakesCountLiveData.value}")
             bundleData.putLong("time", gameboardViewModel.game.secondsUntil.value!!)
-            Log.i("Game Finish", "${endGameStatus}")
+            Log.i("Game Finish", endGameStatus)
             this.findNavController().navigate(
                 R.id.action_navigation_gameboard_to_navigation_end,
                 bundleData
@@ -179,10 +180,6 @@ class GameboardFragment : Fragment(), OnTouchListener {
             isComplite = true
         }
 
-    }
-
-    private fun updateCellsWithMistakes(mistakeCell: Cell) {
-        gameBoardView.updateMistakesCells(mistakeCell)
     }
 
     private fun updateCells(cells: List<Cell>?) = cells?.let {
@@ -213,13 +210,21 @@ class GameboardFragment : Fragment(), OnTouchListener {
         Log.i("GameBoardFragment", "onCreate")
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onStart() {
         super.onStart()
+        Log.i("TIME", "${time}")
+        if (time != null)
+            gameboardViewModel.game.timerOn(chronometer, time!!)
+        else
+            gameboardViewModel.game.timerOn(chronometer)
         Log.i("GameBoardFragment", "onStart")
     }
 
     override fun onStop() {
         super.onStop()
+        gameboardViewModel.game.stopTimer()
+        time = gameboardViewModel.game.secondsUntil.value
         Log.i("GameBoardFragment", "onStop")
     }
 
@@ -232,48 +237,48 @@ class GameboardFragment : Fragment(), OnTouchListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("level_key", gameboardViewModel.game.level)
-        outState.putInt("mode_key", gameboardViewModel.game.mode)
-        outState.putInt("miss_key", gameboardViewModel.game.countMiss)
+//        outState.putString("level_key", gameboardViewModel.game.level)
+//        outState.putInt("mode_key", gameboardViewModel.game.mode)
+//        outState.putInt("miss_key", gameboardViewModel.game.countMiss)
         outState.putLong("time_kay", gameboardViewModel.game.secondsUntil.value!!)
-        val rowArray = IntArray(81)
-        val colArray = IntArray(81)
-        val valueArray = IntArray(81)
-        val startCellArray = BooleanArray(81)
-        for ((i, cell) in gameboardViewModel.game.board.cells.withIndex()) {
-            rowArray[i] = cell.row
-            colArray[i] = cell.col
-            valueArray[i] = cell.value
-            startCellArray[i] = cell.isStartingCell
-        }
-        outState.putIntArray("row_array_kay", rowArray)
-        outState.putIntArray("col_array_kay", colArray)
-        outState.putIntArray("value_array_kay", valueArray)
-        outState.putBooleanArray("start_cell_array_kay", startCellArray)
+//        val rowArray = IntArray(81)
+//        val colArray = IntArray(81)
+//        val valueArray = IntArray(81)
+//        val startCellArray = BooleanArray(81)
+//        for ((i, cell) in gameboardViewModel.game.board.cells.withIndex()) {
+//            rowArray[i] = cell.row
+//            colArray[i] = cell.col
+//            valueArray[i] = cell.value
+//            startCellArray[i] = cell.isStartingCell
+//        }
+//        outState.putIntArray("row_array_kay", rowArray)
+//        outState.putIntArray("col_array_kay", colArray)
+//        outState.putIntArray("value_array_kay", valueArray)
+//        outState.putBooleanArray("start_cell_array_kay", startCellArray)
         Log.i("GameBoardFragment", "save instance")
 
 
     }
 
     private fun restoreGame(savedInstanceState: Bundle) {
-        gameboardViewModel.function(
-            savedInstanceState.getString("level_key")!!,
-            savedInstanceState.getInt("mode_key")
-        )
-        gameboardViewModel.game.countMiss = savedInstanceState.getInt("miss_key")
+//        gameboardViewModel.function(
+//            savedInstanceState.getString("level_key")!!,
+//            savedInstanceState.getInt("mode_key")
+//        )
+//        gameboardViewModel.game.countMiss = savedInstanceState.getInt("miss_key")
 
-        val time = savedInstanceState.getLong("time_key")
-        gameboardViewModel.game.secondsUntil.value = time
-        val cells = List(81) { i ->
-            Cell(
-                savedInstanceState.getIntArray("row_array_key")!![i],
-                savedInstanceState.getIntArray("col_array_key")!![i],
-                savedInstanceState.getIntArray("value_array_kay")!![i],
-                savedInstanceState.getBooleanArray("start_cell_array_kay")!![i]
-            )
-        }
-        gameboardViewModel.game.board = Board(9, cells)
-        Log.i("GameBoardFragment", "restore instance")
+        time = savedInstanceState.getLong("time_key")
+//        gameboardViewModel.game.secondsUntil.value = time
+//        val cells = List(81) { i ->
+//            Cell(
+//                savedInstanceState.getIntArray("row_array_key")!![i],
+//                savedInstanceState.getIntArray("col_array_key")!![i],
+//                savedInstanceState.getIntArray("value_array_kay")!![i],
+//                savedInstanceState.getBooleanArray("start_cell_array_kay")!![i]
+//            )
+//        }
+//        gameboardViewModel.game.board = Board(9, cells)
+//        Log.i("GameBoardFragment", "restore instance")
 
     }
 }
