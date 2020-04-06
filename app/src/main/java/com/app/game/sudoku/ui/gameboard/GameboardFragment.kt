@@ -1,7 +1,5 @@
 package com.app.game.sudoku.ui.gameboard
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -53,22 +51,21 @@ class GameboardFragment : Fragment(), OnTouchListener {
         gameboardViewModel = ViewModelProvider(this)
             .get(GameboardViewModel::class.java)
 
-        if (savedInstanceState != null)
+        /*if (savedInstanceState != null)
             restoreGame(savedInstanceState)
-        else {
+        else {*/
             val level = arguments!!.getInt("level")
             val mode = arguments!!.getInt("mode")
             initlevelandmode(level, mode)
             gameboardViewModel.function(levelGame, modeGame)
-        }
+        //}
 
-        gameboardViewModel.game._secondsUntil.observe(viewLifecycleOwner, Observer {secondsUntilEnd ->
+        gameboardViewModel.game.secondsUntil.observe(viewLifecycleOwner, Observer { secondsUntilEnd ->
             binding.timerChron.text = DateUtils.formatElapsedTime(secondsUntilEnd)
         })
         gameboardViewModel.game.selectedCellLiveData.observe( viewLifecycleOwner, Observer { updateSelectedCellUI(it) })
         gameboardViewModel.game.cellsLiveData.observe(viewLifecycleOwner, Observer { updateCells(it) })
         gameboardViewModel.game.timerOn(chronometer)
-
 
         binding.game = gameboardViewModel.game
 
@@ -97,14 +94,10 @@ class GameboardFragment : Fragment(), OnTouchListener {
         numberButtons.forEachIndexed { index, button ->
             button.setOnClickListener{
                 gameboardViewModel.game.handleInput(index + 1)
-                gameboardViewModel.game.mistakesLiveData.observe(viewLifecycleOwner, Observer { updateCellsWithMistakes(it) })
             }
         }
         binding.deleteButton.setOnClickListener {gameboardViewModel.game.deleteNumInCell()}
-
-        setHasOptionsMenu(true)
-
-
+        //setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -161,11 +154,11 @@ class GameboardFragment : Fragment(), OnTouchListener {
             wins++
             when(mode) {
                 TIME_MODE -> {
-                    curTime = gameboardViewModel.game.GAME_TIMEDOWN - gameboardViewModel.game._secondsUntil.value!!
+                    curTime = gameboardViewModel.game.GAME_TIMEDOWN - gameboardViewModel.game.secondsUntil.value!!
                     Log.i("time timeMode", "${curTime}")
                 }
                 else -> {
-                    curTime = gameboardViewModel.game._secondsUntil.value!!
+                    curTime = gameboardViewModel.game.secondsUntil.value!!
                     Log.i("time", "${curTime}")
                 }
             }
@@ -180,13 +173,12 @@ class GameboardFragment : Fragment(), OnTouchListener {
         }
     }
 
-
-
-
     private fun redirectToEndFragment(endGameStatus: String) {
         if (!isComplite) {
             val bundleData = Bundle()
             bundleData.putString("gameStatus", endGameStatus)
+            bundleData.putString("mistakes", gameboardViewModel.game.mistakesCountLiveData.value)
+            bundleData.putLong("time", gameboardViewModel.game.secondsUntil.value!!)
             Log.i("Game Finish", "${endGameStatus}")
             this.findNavController().navigate(
                 R.id.action_navigation_gameboard_to_navigation_end,
@@ -229,7 +221,6 @@ class GameboardFragment : Fragment(), OnTouchListener {
         Log.i("GameBoardFragment", "onCreate")
     }
 
-
     override fun onStart() {
         super.onStart()
         Log.i("GameBoardFragment", "onStart")
@@ -252,7 +243,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
         outState.putString("level_key", gameboardViewModel.game.level)
         outState.putInt("mode_key", gameboardViewModel.game.mode)
         outState.putInt("miss_key", gameboardViewModel.game.countMiss)
-        outState.putLong("time_kay", gameboardViewModel.game._secondsUntil.value!!)
+        outState.putLong("time_kay", gameboardViewModel.game.secondsUntil.value!!)
         val rowArray = IntArray(81)
         val colArray = IntArray(81)
         val valueArray = IntArray(81)
@@ -280,7 +271,7 @@ class GameboardFragment : Fragment(), OnTouchListener {
         gameboardViewModel.game.countMiss = savedInstanceState.getInt("miss_key")
 
         val time = savedInstanceState.getLong("time_key")
-        gameboardViewModel.game._secondsUntil.value = time
+        gameboardViewModel.game.secondsUntil.value = time
         val cells = List(81) { i ->
             Cell(
                 savedInstanceState.getIntArray("row_array_key")!![i],

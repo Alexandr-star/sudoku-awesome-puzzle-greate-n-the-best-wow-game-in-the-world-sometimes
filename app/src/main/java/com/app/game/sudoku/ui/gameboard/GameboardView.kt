@@ -23,8 +23,6 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
     private var listener: GameboardView.OnTouchListener? = null
 
     private var cells: List<Cell>? = null
-    private var  mistakesCell: Cell? = null
-    private var mistakesBe: Boolean = false
 
     interface OnTouchListener {
         fun onCellTouched(row: Int, col: Int )
@@ -33,7 +31,7 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
     private val thickLinePaint = Paint().apply {
         style = Paint.Style.STROKE
         color = Color.parseColor("#3ee6b9")
-        strokeWidth = 10F
+        strokeWidth = 7F
     }
 
     private val thinLinePaint = Paint().apply {
@@ -49,25 +47,21 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
 
     private val conflictedCellPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
-        color = Color.parseColor("#5bdede")
+        color = Color.parseColor("#aff0f0")
     }
 
     private val textPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.BLACK
         textSize = 32F
+        typeface = Typeface.DEFAULT_BOLD
     }
 
     private val startingCellTextPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
-        color = Color.BLACK
+        color = Color.parseColor("#5b646e")
         textSize = 32F
         typeface = Typeface.DEFAULT_BOLD
-    }
-
-    private val startingCellPaint = Paint().apply {
-        style = Paint.Style.FILL_AND_STROKE
-        color = Color.parseColor("#daf7f7")
     }
 
     private val noteTextPaint = Paint().apply {
@@ -77,8 +71,9 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
 
     private val mistekesTextPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
-        color = Color.RED
-        textSize = 32F
+        color = Color.parseColor("#f07971")
+        textSize = 34F
+        typeface = Typeface.DEFAULT_BOLD
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -93,7 +88,6 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         fillCells(canvas)
         drawLines(canvas)
         drawText(canvas)
-        //drawMistakesText(canvas)
     }
 
     private fun updateMeasure(width: Int) {
@@ -104,58 +98,21 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         startingCellTextPaint.textSize = cellSizePixels / 1.5F
     }
 
-    private fun drawMistakesText(canvas: Canvas) {
-        println(mistakesCell)
-        if (mistakesCell == null) {
-            // ошибок нет
-            Log.i("CHECKMISS GameboardView", "NOT MISTAKE")
-            if (mistakesBe) {
-                // перекрасить в черный
-                Log.i("CHECKMISS GameboardView", "BE MISTAKE SWITCH PAINT")
-            } else
-                Log.i("CHECKMISS GameboardView", "NOT BE MISTAKE")
-                return
-        } else {
-
-            cells?.forEach { cell ->
-                if ( (cell.row == mistakesCell!!.row) && (cell.col == mistakesCell!!.col)) {
-                    val stringValue = cell.value.toString()
-                    val paintToUse = if (cell.isStartingCell) startingCellTextPaint else mistekesTextPaint
-                    val textBounds = Rect()
-                    paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
-                }
-            }
-        }
-    }
-
         private fun drawText(canvas: Canvas) {
             cells?.forEach { cell ->
                 val value = cell.value
 
-                if (value == 0) {
-                    // draw notes
-                    cell.notes.forEach { note ->
-                        val rowInCell = (note - 1) / sqrtSize
-                        val colInCell = (note - 1) % sqrtSize
-                        val stringValue = note.toString()
-
-                        val textBounds = Rect()
-                        noteTextPaint.getTextBounds(stringValue, 0, stringValue.length, textBounds)
-                        val textWidth = noteTextPaint.measureText(stringValue)
-                        val textHeigth = textBounds.height()
-
-                        canvas.drawText(
-                            stringValue,
-                            (cell.col * cellSizePixels) + (colInCell * noteSizePixels) + noteSizePixels / 2 - textWidth / 2f,
-                            (cell.col * cellSizePixels) + (rowInCell * noteSizePixels) + noteSizePixels / 2 + textHeigth / 2f,
-                            noteTextPaint
-                        )
-                    }
-                } else {
+                if (value != 0) {
                     val row = cell.row
                     val col = cell.col
                     val stringValue = cell.value.toString()
-                    val paintToUse = if (cell.isStartingCell) startingCellTextPaint else textPaint
+                    val paintToUse = if (cell.isStartingCell) {
+                                            startingCellTextPaint
+                                        } else if (cell.isMistake){
+                                            mistekesTextPaint
+                                        } else {
+                                            textPaint
+                                        }
                     val textBounds = Rect()
                     paintToUse.getTextBounds(stringValue, 0, stringValue.length, textBounds)
                     val textWidth = paintToUse.measureText(stringValue)
@@ -176,15 +133,12 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
                 val row = it.row
                 val col = it.col
 
-                if (it.isStartingCell) {
-                    fillCell(canvas, row, col, startingCellPaint)
-                } else if (row == selectedRow && col == selectedCall) {
+                if (row == selectedRow && col == selectedCall) {
                     fillCell(canvas, row, col, selectedCellPaint)
                 } else if (row == selectedRow || col == selectedCall) {
                     fillCell(canvas, row, col, conflictedCellPaint)
                 } else if (row / sqrtSize == selectedRow / sqrtSize && col / sqrtSize == selectedCall / sqrtSize) {
                     fillCell(canvas, row, col, conflictedCellPaint)
-
                 }
             }
         }
@@ -202,7 +156,7 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
         private fun drawLines(canvas: Canvas) {
             canvas.drawRect(0F, 0F, width.toFloat(), width.toFloat(), thickLinePaint)
             for (i in 1 until size) {
-                val paintToUse = when (1 % sqrtSize) {
+                val paintToUse = when (i % sqrtSize) {
                     0 -> thickLinePaint
                     else -> thinLinePaint
                 }
@@ -213,7 +167,6 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
                     height.toFloat(),
                     paintToUse
                 )
-
                 canvas.drawLine(
                     0F,
                     i * cellSizePixels,
@@ -255,9 +208,11 @@ class GameboardView(context: Context, attributeSet: AttributeSet) : View(context
             invalidate()
         }
 
-        fun updateMistakesCells(cell: Cell) {
-            this.mistakesCell = cell
-            this.mistakesBe = true
+        fun updateMistakesCells(missCell: Cell) {
+            cells?.forEach { cell ->
+                if (cell.col == missCell.col && cell.row == missCell.row)
+                    cell.isMistake = true
+            }
             invalidate()
         }
 

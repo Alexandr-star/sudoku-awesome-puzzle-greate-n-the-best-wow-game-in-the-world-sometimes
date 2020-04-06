@@ -17,9 +17,6 @@ class Game(var level: String, var mode: Int) {
     private val SIZE = 9
     private val SIZE_MISS = 3
 
-
-    lateinit var gameboardFragment: GameboardFragment
-
     // This is the number of milliseconds in a second
     val ONE_SECOND = 1000L
     // This is the total time of the game
@@ -28,12 +25,7 @@ class Game(var level: String, var mode: Int) {
     private lateinit var timerDown: CountDownTimer
     private lateinit var timer: Chronometer
 
-    var _secondsUntil = MutableLiveData<Long>()
-//    var secondsUntil: LiveData<Long>
-//        get() = _secondsUntil
-//        set(value) {
-//            _secondsUntil.value = value.value
-//        }
+    var secondsUntil = MutableLiveData<Long>()
 
     // Event which triggers the end of the game
     private val _eventGameFinish = MutableLiveData<Boolean>()
@@ -47,8 +39,7 @@ class Game(var level: String, var mode: Int) {
     var cellsLiveData = MutableLiveData<List<Cell>>()
     var takingNotesLiveData = MutableLiveData<Boolean>()
     var highlightedKeysLiveData = MutableLiveData<Set<Int>>()
-    var mistakesLiveData = MutableLiveData<Cell>()
-    lateinit var mistakes: Cell
+    private var mistakes: Cell? = null
     var mistakesCountLiveData = MutableLiveData<String>()
     var countMiss = 0
 
@@ -101,8 +92,8 @@ class Game(var level: String, var mode: Int) {
         if (mode == 1) {
             timer.start()
             timer.setOnChronometerTickListener { timer ->
-                _secondsUntil.value = (SystemClock.elapsedRealtime() - timer.base) / ONE_SECOND + 1
-                Log.i("Timer CLASSIC", "${_secondsUntil.value}")
+                secondsUntil.value = (SystemClock.elapsedRealtime() - timer.base) / ONE_SECOND + 1
+                Log.i("Timer CLASSIC", "${secondsUntil.value}")
             }
         } else if (mode == 2) {
             countDown()
@@ -115,8 +106,8 @@ class Game(var level: String, var mode: Int) {
             ONE_SECOND
         ) {
             override fun onTick(millisUntilFinished: Long) {
-                _secondsUntil.value = millisUntilFinished / ONE_SECOND
-                Log.i("Game TIMER", "${_secondsUntil.value}")
+                secondsUntil.value = millisUntilFinished / ONE_SECOND
+                Log.i("Game TIMER", "${secondsUntil.value}")
             }
             override fun onFinish() {
                 onGameFinishComplete()
@@ -136,18 +127,11 @@ class Game(var level: String, var mode: Int) {
         val cell = board.getCell(selectedRow, selectedCol)
         if (cell.isStartingCell) return
 
-        if (isTakingNots) {
-            if (cell.notes.contains(number)) {
-                cell.notes.remove(number)
-            } else {
-                cell.notes.add(number)
-            }
-            highlightedKeysLiveData.postValue(cell.notes)
-        } else {
-            cell.value = number
-        }
+        cell.value = number
         cellsLiveData.postValue(board.cells)
         checkMistakes(cell)
+        if (cell.row == mistakes?.row && cell.col == mistakes?.col)
+            cell.isMistake = true
 
         if (countMiss == SIZE_MISS) {
             onGameFinishComplete()
@@ -162,10 +146,6 @@ class Game(var level: String, var mode: Int) {
             selectedRow = row
             selectedCol = col
             selectedCellLiveData.postValue(Pair(row, col))
-
-            if (isTakingNots) {
-                highlightedKeysLiveData.postValue(cell.notes)
-            }
         }
     }
 
@@ -173,23 +153,14 @@ class Game(var level: String, var mode: Int) {
         isTakingNots = !isTakingNots
         takingNotesLiveData.postValue(isTakingNots)
 
-        val currentNotes = if (isTakingNots) {
-            board.getCell(selectedRow, selectedCol).notes
-        } else {
-            setOf<Int>()
-        }
+        val currentNotes = setOf<Int>()
         highlightedKeysLiveData.postValue(currentNotes)
     }
 
     fun deleteNumInCell() {
         val cell = board.getCell(selectedRow, selectedCol)
-        if (isTakingNots) {
-            cell.notes.clear()
-            highlightedKeysLiveData.postValue(setOf())
-        } else {
-            cell.value = 0
-        }
         cell.value = 0
+        cell.isMistake = false
         cellsLiveData.postValue(board.cells)
         checkMistakes(cell)
     }
@@ -197,7 +168,7 @@ class Game(var level: String, var mode: Int) {
     private fun checkMistakes(cell: Cell) {
         if (isInBoxMiss(cell) || isInColMiss(cell) || isInRowMiss(cell)) {
             mistakesCountLiveData.postValue(missToString(++countMiss))
-            Log.i("Game", "MISTAKE IS  (${mistakes.row}; ${mistakes.col})")
+            Log.i("Game", "MISTAKE IS  (${mistakes?.row}; ${mistakes?.col})")
             Log.i("Game", "MISTAKE IS ${mistakesCountLiveData}")
         } else {
             if (board.isBoardFull()) {

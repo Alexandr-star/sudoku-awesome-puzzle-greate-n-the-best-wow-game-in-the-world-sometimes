@@ -24,6 +24,13 @@ class EndGameFragment  : Fragment() {
 
         endGameViewModel = ViewModelProvider(this).get(EndGameViewModel::class.java)
 
+        endGameViewModel.setFinishGameData(
+            arguments!!.getString("gameStatus")!!,
+            arguments!!.getString("mistakes")!!,
+            arguments!!.getLong("time")
+        )
+
+        binding.endGameView.text = endGameViewModel.statusGame.value
 
         binding.closeGameButton.setOnClickListener { v: View ->
             v.findNavController().navigate(

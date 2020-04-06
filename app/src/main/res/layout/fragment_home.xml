@@ -18,13 +18,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/resumeButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/resumeButton"
-                android:visibility="visible" />
-
-            <Button
                 android:id="@+id/classicGameButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
