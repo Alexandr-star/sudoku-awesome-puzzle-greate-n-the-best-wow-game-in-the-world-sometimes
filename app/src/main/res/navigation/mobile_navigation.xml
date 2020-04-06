@@ -3,24 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_menu">
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.app.game.sudoku.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.app.game.sudoku.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_level"
-            app:destination="@id/navigation_level"
-            app:popUpTo="@id/navigation_home" />
-    </fragment>
 
+    <fragment
+        android:id="@+id/navigation_menu"
+        android:name="com.app.game.sudoku.ui.menu.MenuFragment"
+        android:label="@string/title_menu"
+        tools:layout="@layout/fragment_menu">
+        <action
+            android:id="@+id/action_navigation_menu_to_navigation_level"
+            app:destination="@id/navigation_level"
+            app:popUpTo="@id/navigation_menu" />
+    </fragment>
 
 
     <fragment
@@ -50,11 +50,9 @@
         android:name="com.app.game.sudoku.ui.gamevent.EndGameFragment"
         android:label="@string/title_gameEnd"
         tools:layout="@layout/fragment_game_end">
-
         <action
-            android:id="@+id/action_navigation_end_to_navigation_home"
-            app:destination="@id/navigation_home"
-            app:popUpTo="@id/navigation_home" />
+            android:id="@+id/action_navigation_end_to_navigation_menu"
+            app:destination="@id/navigation_menu" />
     </fragment>
 
 

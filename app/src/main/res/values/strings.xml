@@ -7,10 +7,9 @@
     <string name="title_level">Levels</string>
     <string name="title_pause">Pause</string>
     <string name="title_gameEnd">End Game</string>
+    <string name="title_menu">Menu</string>
 
     <!--  ui buttons  -->
-    <string name="resumeButton">Resume</string>
-
     <string name="classicGameButton">Start Classic</string>
     <string name="timeGameButton">Start Time</string>
 

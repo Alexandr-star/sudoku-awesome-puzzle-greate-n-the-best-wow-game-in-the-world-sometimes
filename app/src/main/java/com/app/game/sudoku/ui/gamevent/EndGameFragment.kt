@@ -34,7 +34,7 @@ class EndGameFragment  : Fragment() {
 
         binding.closeGameButton.setOnClickListener { v: View ->
             v.findNavController().navigate(
-                R.id.action_navigation_end_to_navigation_home
+                R.id.action_navigation_end_to_navigation_menu
             )
         }
 

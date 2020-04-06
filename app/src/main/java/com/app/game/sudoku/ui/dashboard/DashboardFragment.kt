@@ -2,18 +2,15 @@ package com.app.game.sudoku.ui.dashboard
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.ViewPager
 import com.app.game.sudoku.R
 import com.app.game.sudoku.databinding.FragmentDashboardBinding
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 
 class DashboardFragment : Fragment() {

@@ -1,7 +1,6 @@
 package com.app.game.sudoku.ui.home
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,14 +30,14 @@ class HomeFragment : Fragment() {
         binding.classicGameButton.setOnClickListener {v: View ->
             bundleData.putInt("modeSend", CLASSIC_GAME)
             v.findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_level,
+                R.id.action_navigation_menu_to_navigation_level,
                 bundleData
             )
         }
         binding.timeGameButton.setOnClickListener {v: View ->
             bundleData.putInt("modeSend", TIME_GAME)
             v.findNavController().navigate(
-                R.id.action_navigation_home_to_navigation_level,
+                R.id.action_navigation_menu_to_navigation_level,
                 bundleData
             )
         }

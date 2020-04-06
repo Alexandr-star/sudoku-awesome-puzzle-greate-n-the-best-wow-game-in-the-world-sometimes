@@ -1,13 +1,9 @@
 package com.app.game.sudoku.ui.dashboard.classic
 
-import android.annotation.SuppressLint
-import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.game.sudoku.statisticStore.StatisticPreference
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ClassicStatViewModel : ViewModel() {
 

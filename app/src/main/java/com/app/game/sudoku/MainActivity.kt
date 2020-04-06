@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         StatisticPreference.init(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        //val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController)
         // Passing each menu ID as a set of Ids because each
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home,
                 R.id.navigation_dashboard))
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        //navView.setupWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {

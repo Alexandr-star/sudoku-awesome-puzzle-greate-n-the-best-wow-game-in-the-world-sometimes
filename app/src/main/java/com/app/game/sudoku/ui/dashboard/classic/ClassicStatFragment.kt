@@ -1,24 +1,16 @@
 package com.app.game.sudoku.ui.dashboard.classic
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.text.format.DateUtils
-import android.util.Log
-import android.util.TimeUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.app.game.sudoku.R
 import com.app.game.sudoku.databinding.ClassicStatFragmentBinding
-import com.app.game.sudoku.statisticStore.StatisticPreference
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ClassicStatFragment : Fragment() {
 
